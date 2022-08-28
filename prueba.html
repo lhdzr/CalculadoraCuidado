@@ -216,28 +216,13 @@ slide:not(.current) .plotly.html-widget{
 
 </article></slide><slide class=""><hgroup><h2>Slide with library loading</h2></hgroup><article  id="slide-with-library-loading">
 
-<p><code>library(tm)<br/>library(tidytext)<br/>library(tidyr)<br/>library(dplyr)<br/>library(ggplot2)<br/>library(stringr)<br/>library(tidytext)<br/>library(wordcloud)<br/>library(textdata)<br/>library(rtweet)<br/>library(tidyverse) </code></p>
+<p><code>library(rtweet) library(tidyverse) library(tidytext) library(ggwordcloud) library(ggplot2) </code></p>
 
 </article></slide><slide class=""><hgroup><h2>Data Extraction</h2></hgroup><article  id="data-extraction">
 
-<pre >## # A tibble: 6 x 43
-##   created_at               id id_str        full_text truncated display_text_ra~
-##   &lt;dttm&gt;                &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;     &lt;lgl&gt;                &lt;dbl&gt;
-## 1 2022-08-25 13:38:10 1.56e18 156287197414~ &quot;All eye~ FALSE                   27
-## 2 2022-08-25 22:45:50 1.56e18 156300979911~ &quot;La PDI ~ FALSE                  233
-## 3 2022-08-26 12:26:04 1.56e18 156321621823~ &quot;Destaca~ FALSE                  123
-## 4 2022-08-27 09:37:19 1.56e18 156353613866~ &quot;RT @Fla~ FALSE                  140
-## 5 2022-08-27 09:37:18 1.56e18 156353613660~ &quot;RT @Jua~ FALSE                  140
-## 6 2022-08-27 09:37:18 1.56e18 156353613584~ &quot;RT @mcu~ FALSE                  113
-## # ... with 37 more variables: entities &lt;list&gt;, metadata &lt;list&gt;, source &lt;chr&gt;,
-## #   in_reply_to_status_id &lt;dbl&gt;, in_reply_to_status_id_str &lt;chr&gt;,
-## #   in_reply_to_user_id &lt;dbl&gt;, in_reply_to_user_id_str &lt;chr&gt;,
-## #   in_reply_to_screen_name &lt;chr&gt;, geo &lt;list&gt;, coordinates &lt;list&gt;,
-## #   place &lt;list&gt;, contributors &lt;lgl&gt;, is_quote_status &lt;lgl&gt;,
-## #   quoted_status_id &lt;dbl&gt;, quoted_status_id_str &lt;chr&gt;, quoted_status &lt;list&gt;,
-## #   retweet_count &lt;int&gt;, favorite_count &lt;int&gt;, favorited &lt;lgl&gt;, ...</pre>
+<p><code>chile_raw = search_tweets(q=&ldquo;boric OR chile OR constitucion OR apruebo OR rechazo&rdquo;, n = 1000 )</code></p>
 
-</article></slide><slide class=""><hgroup><h2></h2></hgroup><article  id="section"></article></slide>
+</article></slide><slide class=""><hgroup><h2>Limpieza de datos</h2></hgroup><article  id="limpieza-de-datos"></article></slide>
 
 
   <slide class="backdrop"></slide>

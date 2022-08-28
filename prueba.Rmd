@@ -7,7 +7,6 @@ output: ioslides_presentation
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-library(rtweet)
 ```
 
 ## R Markdown
@@ -45,30 +44,20 @@ En este ejercicio, se presentan tendencias en los tweets relacionados a este
 evento.
 
 ## Slide with library loading
-<code>library(tm)\
-library(tidytext)\
-library(tidyr)\
-library(dplyr)\
-library(ggplot2)\
-library(stringr)\
-library(tidytext)\
-library(wordcloud)\
-library(textdata)\
-library(rtweet)\
+<code>library(rtweet)
 library(tidyverse)
+library(tidytext)
+library(ggwordcloud)
+library(ggplot2)
 </code>
 
 
 
 ## Data Extraction
-```{r, echo=TRUE}
-chile = search_tweets(q="boric OR chile OR constitucion OR apruebo OR rechazo",
-                      n = 1000,
-                      )
-```
-```{r, echo=TRUE}
-dim(chile)
-```
+
+<code>chile_raw = search_tweets(q="boric OR chile OR constitucion OR apruebo OR rechazo",\n
+    n = 1000
+)</code>
 
 
 ## Limpieza de datos
