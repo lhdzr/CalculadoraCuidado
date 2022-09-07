@@ -10,5 +10,5 @@ chile_raw = search_tweets(q="boric OR chile OR constitucion OR apruebo OR rechaz
                       n = 1000
                       )
 
-write_as_csv(chiledf, "products/csv/chile_tweets_raw.csv", prepend_ids = TRUE, 
+write_as_csv(chile_raw, "products/csv/chile_tweets_raw.csv", prepend_ids = TRUE, 
              na = "", fileEncoding = "UTF-8")
