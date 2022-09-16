@@ -1,0 +1,25 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Lectura de datos de la ENUT
+```{r}
+library(tidyverse)
+```
+
+```{r}
+vivienda = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tvivienda_enut_2019/conjunto_de_datos/conjunto_de_datos_tvivienda_enut_2019.csv")
+sociodem = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tsdem_enut_2019/conjunto_de_datos/conjunto_de_datos_tsdem_enut_2019.csv")
+modulo = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tmodulo_enut_2019/conjunto_de_datos/conjunto_de_datos_tmodulo_enut_2019.csv")
+hogar = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_thogar_enut_2019/conjunto_de_datos/conjunto_de_datos_thogar_enut_2019.csv")
+```
+
+```{r}
+#summary(hogar)
+#summary(modulo)
+#summary(sociodem)
+summary(vivienda)
+```
+
+
