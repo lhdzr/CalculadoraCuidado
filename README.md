@@ -1,1 +1,2 @@
-En este ejercicio, a través de una API utilizando la librería rtweet, se extraen tweets con datos sobre la nueva constitución chilena.
+Calculadora del Cuidado
+Esfuerzo para generar una propuesta de innovación sobre la herramienta de calculadora del cuidado para CIEP.
