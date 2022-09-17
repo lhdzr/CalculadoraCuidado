@@ -29,15 +29,4 @@ top_words %>%
   ggtitle("Cuidados",
           subtitle = "Términos más populares")
 
-## HASHTAG WORDCLOUD
-data_wordcloud <- chile_hashtags %>%
-  count(word, sort = TRUE) %>%
-  arrange(-n) %>%
-  slice(1:35)
 
-# GRÁFICO WORDCLOUD
-ggplot(data_hashtags_wordcloud,
-       aes(label = hashtag, size = n, color = pleb_hashtag)) +
-  geom_text_wordcloud() +
-  scale_size_area(max_size = 8) + # we set a maximum size for the text
-  theme_void()
