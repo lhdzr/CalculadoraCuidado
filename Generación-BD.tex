@@ -1,0 +1,387 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+  \usepackage{amssymb}
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Generación de Base de Datos},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Generación de Base de Datos}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\hypertarget{enut}{%
+\subsection{ENUT}\label{enut}}
+
+\hypertarget{lectura-de-datos}{%
+\paragraph{Lectura de datos}\label{lectura-de-datos}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'tidyverse' was built under R version 4.0.5
+\end{verbatim}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.1     v dplyr   1.0.6
+## v tidyr   1.1.3     v stringr 1.4.0
+## v readr   1.4.0     v forcats 0.5.1
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'ggplot2' was built under R version 4.0.5
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'tibble' was built under R version 4.0.5
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'tidyr' was built under R version 4.0.5
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'readr' was built under R version 4.0.5
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'purrr' was built under R version 4.0.5
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'dplyr' was built under R version 4.0.5
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'stringr' was built under R version 4.0.5
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'forcats' was built under R version 4.0.5
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tvivienda }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/conjunto\_de\_datos\_enut\_2019\_csv/conjunto\_de\_datos\_enut\_2019/conjunto\_de\_datos\_tvivienda\_enut\_2019/conjunto\_de\_datos/conjunto\_de\_datos\_tvivienda\_enut\_2019.csv"}\NormalTok{,}
+                     \AttributeTok{encoding =} \StringTok{"utf{-}8"}\NormalTok{)}
+
+\NormalTok{thogar }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/conjunto\_de\_datos\_enut\_2019\_csv/conjunto\_de\_datos\_enut\_2019/conjunto\_de\_datos\_thogar\_enut\_2019/conjunto\_de\_datos/conjunto\_de\_datos\_thogar\_enut\_2019.csv"}\NormalTok{,}
+                  \AttributeTok{encoding =} \StringTok{"utf{-}8"}\NormalTok{)}
+
+\NormalTok{tmodulo }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/conjunto\_de\_datos\_enut\_2019\_csv/conjunto\_de\_datos\_enut\_2019/conjunto\_de\_datos\_tmodulo\_enut\_2019/conjunto\_de\_datos/conjunto\_de\_datos\_tmodulo\_enut\_2019.csv"}\NormalTok{,}
+                 \AttributeTok{encoding =} \StringTok{"utf{-}8"}\NormalTok{)}
+
+\NormalTok{tsdem }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/conjunto\_de\_datos\_enut\_2019\_csv/conjunto\_de\_datos\_enut\_2019/conjunto\_de\_datos\_tsdem\_enut\_2019/conjunto\_de\_datos/conjunto\_de\_datos\_tsdem\_enut\_2019.csv"}\NormalTok{,}
+                   \AttributeTok{encoding =} \StringTok{"utf{-}8"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{renombrar-columnas-con-nombre-importado-incorrectamente}{%
+\paragraph{Renombrar columnas con nombre importado
+incorrectamente}\label{renombrar-columnas-con-nombre-importado-incorrectamente}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tvivienda }\OtherTok{=}\NormalTok{ tvivienda }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{rename}\NormalTok{(}\AttributeTok{UPM=}\NormalTok{ï..UPM)}
+\NormalTok{thogar }\OtherTok{=}\NormalTok{ thogar }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{rename}\NormalTok{(}\AttributeTok{UPM=}\NormalTok{ï..UPM)}
+\NormalTok{tsdem }\OtherTok{=}\NormalTok{ tsdem }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{rename}\NormalTok{(}\AttributeTok{UPM=}\NormalTok{ï..UPM)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{lectura-de-variables-seleccionadas}{%
+\paragraph{Lectura de variables
+seleccionadas}\label{lectura-de-variables-seleccionadas}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var\_sel }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/variables\_seleccionadas.csv"}\NormalTok{,}\AttributeTok{encoding =} \StringTok{"utf{-}8"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{definiciuxf3n-de-variables-seleccionadas-para-cada-tabla}{%
+\paragraph{Definición de variables seleccionadas para cada
+tabla}\label{definiciuxf3n-de-variables-seleccionadas-para-cada-tabla}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vars\_viv }\OtherTok{=} \FunctionTok{toupper}\NormalTok{(var\_sel}\SpecialCharTok{$}\NormalTok{variable[var\_sel}\SpecialCharTok{$}\NormalTok{tabla}\SpecialCharTok{==}\StringTok{"tvivienda"}\NormalTok{])}
+\NormalTok{vars\_hog }\OtherTok{=} \FunctionTok{toupper}\NormalTok{(var\_sel}\SpecialCharTok{$}\NormalTok{variable[var\_sel}\SpecialCharTok{$}\NormalTok{tabla}\SpecialCharTok{==}\StringTok{"thogar"}\NormalTok{])}
+\NormalTok{vars\_sdm }\OtherTok{=} \FunctionTok{toupper}\NormalTok{(var\_sel}\SpecialCharTok{$}\NormalTok{variable[var\_sel}\SpecialCharTok{$}\NormalTok{tabla}\SpecialCharTok{==}\StringTok{"tsdem"}\NormalTok{])}
+\NormalTok{vars\_mod }\OtherTok{=} \FunctionTok{toupper}\NormalTok{(var\_sel}\SpecialCharTok{$}\NormalTok{variable[var\_sel}\SpecialCharTok{$}\NormalTok{tabla}\SpecialCharTok{==}\StringTok{"tmodulo"}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{subset-de-las-tablas-usando-uxfanicamente-variables-seleccionadas}{%
+\paragraph{Subset de las tablas usando únicamente variables
+seleccionadas}\label{subset-de-las-tablas-usando-uxfanicamente-variables-seleccionadas}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tvivienda }\OtherTok{=} \FunctionTok{subset}\NormalTok{(tvivienda,}\AttributeTok{select =}\NormalTok{ vars\_viv)}
+\NormalTok{thogar }\OtherTok{=} \FunctionTok{subset}\NormalTok{(thogar,}\AttributeTok{select =}\NormalTok{ vars\_hog)}
+\NormalTok{tsdem }\OtherTok{=} \FunctionTok{subset}\NormalTok{(tsdem,}\AttributeTok{select =}\NormalTok{ vars\_sdm)}
+\NormalTok{tmodulo }\OtherTok{=} \FunctionTok{subset}\NormalTok{(tmodulo,}\AttributeTok{select =}\NormalTok{ vars\_mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{definiciuxf3n-de-identificadores}{%
+\paragraph{Definición de
+identificadores}\label{definiciuxf3n-de-identificadores}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tvivienda}\SpecialCharTok{$}\NormalTok{vid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(tvivienda}\SpecialCharTok{$}\NormalTok{upm,tvivienda}\SpecialCharTok{$}\NormalTok{VIV\_SEL, }\AttributeTok{sep =} \StringTok{"\_"}\NormalTok{)}
+
+\NormalTok{thogar}\SpecialCharTok{$}\NormalTok{vid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(thogar}\SpecialCharTok{$}\NormalTok{upm,thogar}\SpecialCharTok{$}\NormalTok{VIV\_SEL,}\AttributeTok{sep=}\StringTok{"\_"}\NormalTok{)}
+\NormalTok{thogar}\SpecialCharTok{$}\NormalTok{hid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(thogar}\SpecialCharTok{$}\NormalTok{upm,thogar}\SpecialCharTok{$}\NormalTok{VIV\_SEL,thogar}\SpecialCharTok{$}\NormalTok{HOGAR,}\AttributeTok{sep=}\StringTok{"\_"}\NormalTok{)}
+
+\NormalTok{tsdem}\SpecialCharTok{$}\NormalTok{vid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(tsdem}\SpecialCharTok{$}\NormalTok{UPM,tsdem}\SpecialCharTok{$}\NormalTok{VIV\_SEL,}\AttributeTok{sep=}\StringTok{"\_"}\NormalTok{)}
+\NormalTok{tsdem}\SpecialCharTok{$}\NormalTok{hid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(tsdem}\SpecialCharTok{$}\NormalTok{UPM,tsdem}\SpecialCharTok{$}\NormalTok{VIV\_SEL,tsdem}\SpecialCharTok{$}\NormalTok{HOGAR,}\AttributeTok{sep=}\StringTok{"\_"}\NormalTok{)}
+\NormalTok{tsdem}\SpecialCharTok{$}\NormalTok{uid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(tsdem}\SpecialCharTok{$}\NormalTok{UPM,tsdem}\SpecialCharTok{$}\NormalTok{VIV\_SEL,tsdem}\SpecialCharTok{$}\NormalTok{HOGAR,tsdem}\SpecialCharTok{$}\NormalTok{N\_REN,}\AttributeTok{sep=}\StringTok{"\_"}\NormalTok{)}
+
+\NormalTok{tmodulo}\SpecialCharTok{$}\NormalTok{vid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(tmodulo}\SpecialCharTok{$}\NormalTok{upm,tmodulo}\SpecialCharTok{$}\NormalTok{VIV\_SEL,}\AttributeTok{sep=}\StringTok{"\_"}\NormalTok{)}
+\NormalTok{tmodulo}\SpecialCharTok{$}\NormalTok{hid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(tmodulo}\SpecialCharTok{$}\NormalTok{upm,tmodulo}\SpecialCharTok{$}\NormalTok{VIV\_SEL,tmodulo}\SpecialCharTok{$}\NormalTok{HOGAR,}\AttributeTok{sep=}\StringTok{"\_"}\NormalTok{)}
+\NormalTok{tmodulo}\SpecialCharTok{$}\NormalTok{uid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(tmodulo}\SpecialCharTok{$}\NormalTok{upm,tmodulo}\SpecialCharTok{$}\NormalTok{VIV\_SEL,tmodulo}\SpecialCharTok{$}\NormalTok{HOGAR,tmodulo}\SpecialCharTok{$}\NormalTok{N\_REN,}\AttributeTok{sep=}\StringTok{"\_"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{enoe}{%
+\subsection{ENOE}\label{enoe}}
+
+\hypertarget{lectura-de-la-enoe}{%
+\paragraph{Lectura de la ENOE}\label{lectura-de-la-enoe}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{enoe\_c1 }\OtherTok{=} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"data/conjunto\_de\_datos\_enoen\_2022\_2t\_csv/conjunto\_de\_datos\_coe1\_enoen\_2022\_2t/conjunto\_de\_datos/conjunto\_de\_datos\_coe1\_enoen\_2022\_2t.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   .default = col_double(),
+##   p2_1 = col_logical(),
+##   p2_9 = col_logical(),
+##   p2d2 = col_logical(),
+##   p2d4 = col_logical(),
+##   p2d8 = col_logical(),
+##   p2d10 = col_logical(),
+##   p2d11 = col_logical(),
+##   p2d99 = col_logical(),
+##   p2h9 = col_logical(),
+##   p3c4 = col_logical(),
+##   p3c9 = col_logical(),
+##   p3f2 = col_logical(),
+##   p3g4_1 = col_logical(),
+##   p3g4_2 = col_logical(),
+##   p3g9 = col_logical(),
+##   p5f1 = col_logical(),
+##   p5f2 = col_logical(),
+##   p5f3 = col_logical(),
+##   p5f4 = col_logical(),
+##   p5f5 = col_logical()
+##   # ... with 9 more columns
+## )
+## i Use `spec()` for the full column specifications.
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: 7254 parsing failures.
+##  row   col           expected actual                                                                                                                                       file
+## 1292 p2d2  1/0/T/F/TRUE/FALSE     2  'data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe1_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe1_enoen_2022_2t.csv'
+## 1293 p2d2  1/0/T/F/TRUE/FALSE     2  'data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe1_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe1_enoen_2022_2t.csv'
+## 1369 p5f13 1/0/T/F/TRUE/FALSE     13 'data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe1_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe1_enoen_2022_2t.csv'
+## 1439 p2d99 1/0/T/F/TRUE/FALSE     99 'data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe1_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe1_enoen_2022_2t.csv'
+## 1983 p2d4  1/0/T/F/TRUE/FALSE     4  'data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe1_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe1_enoen_2022_2t.csv'
+## .... ..... .................. ...... ..........................................................................................................................................
+## See problems(...) for more details.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{enoe\_c2 }\OtherTok{=} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"data/conjunto\_de\_datos\_enoen\_2022\_2t\_csv/conjunto\_de\_datos\_coe2\_enoen\_2022\_2t/conjunto\_de\_datos/conjunto\_de\_datos\_coe2\_enoen\_2022\_2t.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   .default = col_double(),
+##   p6_99 = col_logical(),
+##   p6a3 = col_logical(),
+##   p6a9 = col_logical(),
+##   p8_1 = col_logical(),
+##   p8_9 = col_logical(),
+##   p9_5 = col_logical(),
+##   p9_h5 = col_logical(),
+##   p9_m5 = col_logical()
+## )
+## i Use `spec()` for the full column specifications.
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: 1963 parsing failures.
+##  row   col           expected actual                                                                                                                                       file
+## 1353 p9_5  1/0/T/F/TRUE/FALSE     5  'data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe2_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe2_enoen_2022_2t.csv'
+## 1353 p9_h5 1/0/T/F/TRUE/FALSE     2  'data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe2_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe2_enoen_2022_2t.csv'
+## 1589 p9_5  1/0/T/F/TRUE/FALSE     5  'data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe2_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe2_enoen_2022_2t.csv'
+## 1589 p9_h5 1/0/T/F/TRUE/FALSE     2  'data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe2_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe2_enoen_2022_2t.csv'
+## 5508 p6_99 1/0/T/F/TRUE/FALSE     99 'data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe2_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe2_enoen_2022_2t.csv'
+## .... ..... .................. ...... ..........................................................................................................................................
+## See problems(...) for more details.
+\end{verbatim}
+
+\hypertarget{selecciuxf3n-de-variables-en-las-tablas}{%
+\paragraph{Selección de variables en las
+tablas}\label{selecciuxf3n-de-variables-en-las-tablas}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vars\_c1 }\OtherTok{=}\NormalTok{ var\_sel}\SpecialCharTok{$}\NormalTok{variable[var\_sel}\SpecialCharTok{$}\NormalTok{encuesta}\SpecialCharTok{==}\StringTok{"ENOE"} \SpecialCharTok{\&}\NormalTok{ var\_sel}\SpecialCharTok{$}\NormalTok{tabla}\SpecialCharTok{==}\StringTok{"coe1"}\NormalTok{]}
+\NormalTok{enoe\_c1 }\OtherTok{=} \FunctionTok{subset}\NormalTok{(enoe\_c1,}\AttributeTok{select =}\NormalTok{ vars\_c1)}
+
+\NormalTok{vars\_c2 }\OtherTok{=}\NormalTok{ var\_sel}\SpecialCharTok{$}\NormalTok{variable[var\_sel}\SpecialCharTok{$}\NormalTok{encuesta}\SpecialCharTok{==}\StringTok{"ENOE"} \SpecialCharTok{\&}\NormalTok{ var\_sel}\SpecialCharTok{$}\NormalTok{tabla}\SpecialCharTok{==}\StringTok{"coe2"}\NormalTok{]}
+\NormalTok{enoe\_c2 }\OtherTok{=} \FunctionTok{subset}\NormalTok{(enoe\_c2,}\AttributeTok{select =}\NormalTok{ vars\_c2)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{definiciuxf3n-de-identificadores-1}{%
+\paragraph{Definición de
+identificadores}\label{definiciuxf3n-de-identificadores-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{attach}\NormalTok{(enoe\_c1)}
+\NormalTok{enoe\_c1}\SpecialCharTok{$}\NormalTok{uid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(upm,v\_sel,n\_hog,n\_ren,}\AttributeTok{sep =} \StringTok{"\_"}\NormalTok{)}
+\NormalTok{enoe\_c1}\SpecialCharTok{$}\NormalTok{hid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(upm,v\_sel,n\_hog,}\AttributeTok{sep =} \StringTok{"\_"}\NormalTok{)}
+\NormalTok{enoe\_c1}\SpecialCharTok{$}\NormalTok{vid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(upm,v\_sel,}\AttributeTok{sep =} \StringTok{"\_"}\NormalTok{)}
+\FunctionTok{detach}\NormalTok{()}
+
+\FunctionTok{attach}\NormalTok{(enoe\_c2)}
+\NormalTok{enoe\_c2}\SpecialCharTok{$}\NormalTok{uid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(upm,v\_sel,n\_hog,n\_ren,}\AttributeTok{sep =} \StringTok{"\_"}\NormalTok{)}
+\NormalTok{enoe\_c2}\SpecialCharTok{$}\NormalTok{hid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(upm,v\_sel,n\_hog,}\AttributeTok{sep =} \StringTok{"\_"}\NormalTok{)}
+\NormalTok{enoe\_c2}\SpecialCharTok{$}\NormalTok{vid }\OtherTok{=} \FunctionTok{paste}\NormalTok{(upm,v\_sel,}\AttributeTok{sep =} \StringTok{"\_"}\NormalTok{)}
+\FunctionTok{detach}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}

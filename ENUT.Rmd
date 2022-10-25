@@ -3,16 +3,23 @@ title: "R Notebook"
 output: html_notebook
 ---
 
+# Limpieza de base de datos
+El propósito de este ejercicio es la limpieza de las bases de datos descargadas
+a través de plataformas oficiales. La primera tabla tratada será la Encuesta 
+Nacional de Uso de Tiempo (ENUT). Para realizar la limpieza de la base de datos, se 
+
+<code>library(tidyverse)</code><br>
+
 Lectura de datos de la ENUT
-```{r}
+```{r include=FALSE}
 library(tidyverse)
 ```
 
 ```{r}
-vivienda = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tvivienda_enut_2019/conjunto_de_datos/conjunto_de_datos_tvivienda_enut_2019.csv")
-sociodem = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tsdem_enut_2019/conjunto_de_datos/conjunto_de_datos_tsdem_enut_2019.csv")
-modulo = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tmodulo_enut_2019/conjunto_de_datos/conjunto_de_datos_tmodulo_enut_2019.csv")
-hogar = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_thogar_enut_2019/conjunto_de_datos/conjunto_de_datos_thogar_enut_2019.csv")
+tvivienda = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tvivienda_enut_2019/conjunto_de_datos/conjunto_de_datos_tvivienda_enut_2019.csv")
+tsdem = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tsdem_enut_2019/conjunto_de_datos/conjunto_de_datos_tsdem_enut_2019.csv")
+tmodulo = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tmodulo_enut_2019/conjunto_de_datos/conjunto_de_datos_tmodulo_enut_2019.csv")
+thogar = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_thogar_enut_2019/conjunto_de_datos/conjunto_de_datos_thogar_enut_2019.csv")
 ```
 
 ```{r}

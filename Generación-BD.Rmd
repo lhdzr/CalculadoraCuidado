@@ -1,0 +1,117 @@
+---
+title: "Generación de Base de Datos"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Liga a las tablas originales
+A través de esta <a href="https://drive.google.com/drive/u/0/folders/12xYidjNex6IJh3aR7w1qbR7jaRhjJhI7">
+liga</a> se puede acceder a los zip con las bases de datos como fueron descargadas
+de la INEGI.
+
+
+## ENUT
+
+#### Lectura de datos
+
+```{r}
+library(tidyverse)
+
+tvivienda = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tvivienda_enut_2019/conjunto_de_datos/conjunto_de_datos_tvivienda_enut_2019.csv",
+                     encoding = "utf-8")
+
+thogar = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_thogar_enut_2019/conjunto_de_datos/conjunto_de_datos_thogar_enut_2019.csv",
+                  encoding = "utf-8")
+
+tmodulo = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tmodulo_enut_2019/conjunto_de_datos/conjunto_de_datos_tmodulo_enut_2019.csv",
+                 encoding = "utf-8")
+
+tsdem = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tsdem_enut_2019/conjunto_de_datos/conjunto_de_datos_tsdem_enut_2019.csv",
+                   encoding = "utf-8")
+```
+
+#### Renombrar columnas con nombre importado incorrectamente
+
+```{r}
+tvivienda = tvivienda %>% rename(UPM=ï..UPM)
+thogar = thogar %>% rename(UPM=ï..UPM)
+tsdem = tsdem %>% rename(UPM=ï..UPM)
+```
+
+#### Lectura de variables seleccionadas
+
+```{r}
+var_sel = read.csv("data/variables_seleccionadas.csv",encoding = "utf-8")
+```
+
+#### Definición de variables seleccionadas para cada tabla
+
+```{r}
+vars_viv = toupper(var_sel$variable[var_sel$tabla=="tvivienda"])
+vars_hog = toupper(var_sel$variable[var_sel$tabla=="thogar"])
+vars_sdm = toupper(var_sel$variable[var_sel$tabla=="tsdem"])
+vars_mod = toupper(var_sel$variable[var_sel$tabla=="tmodulo"])
+```
+
+#### Subset de las tablas usando únicamente variables seleccionadas
+
+```{r}
+tvivienda = subset(tvivienda,select = vars_viv)
+thogar = subset(thogar,select = vars_hog)
+tsdem = subset(tsdem,select = vars_sdm)
+tmodulo = subset(tmodulo,select = vars_mod)
+```
+
+#### Definición de identificadores
+
+```{r}
+tvivienda$vid = paste(tvivienda$upm,tvivienda$VIV_SEL, sep = "_")
+
+thogar$vid = paste(thogar$upm,thogar$VIV_SEL,sep="_")
+thogar$hid = paste(thogar$upm,thogar$VIV_SEL,thogar$HOGAR,sep="_")
+
+tsdem$vid = paste(tsdem$UPM,tsdem$VIV_SEL,sep="_")
+tsdem$hid = paste(tsdem$UPM,tsdem$VIV_SEL,tsdem$HOGAR,sep="_")
+tsdem$uid = paste(tsdem$UPM,tsdem$VIV_SEL,tsdem$HOGAR,tsdem$N_REN,sep="_")
+
+tmodulo$vid = paste(tmodulo$upm,tmodulo$VIV_SEL,sep="_")
+tmodulo$hid = paste(tmodulo$upm,tmodulo$VIV_SEL,tmodulo$HOGAR,sep="_")
+tmodulo$uid = paste(tmodulo$upm,tmodulo$VIV_SEL,tmodulo$HOGAR,tmodulo$N_REN,sep="_")
+```
+
+## ENOE
+
+#### Lectura de la ENOE
+
+```{r}
+enoe_c1 = read_csv("data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe1_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe1_enoen_2022_2t.csv")
+enoe_c2 = read_csv("data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe2_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe2_enoen_2022_2t.csv")
+```
+
+#### Selección de variables en las tablas
+
+```{r}
+vars_c1 = var_sel$variable[var_sel$encuesta=="ENOE" & var_sel$tabla=="coe1"]
+enoe_c1 = subset(enoe_c1,select = vars_c1)
+
+vars_c2 = var_sel$variable[var_sel$encuesta=="ENOE" & var_sel$tabla=="coe2"]
+enoe_c2 = subset(enoe_c2,select = vars_c2)
+```
+
+#### Definición de identificadores
+
+```{r}
+attach(enoe_c1)
+enoe_c1$uid = paste(upm,v_sel,n_hog,n_ren,sep = "_")
+enoe_c1$hid = paste(upm,v_sel,n_hog,sep = "_")
+enoe_c1$vid = paste(upm,v_sel,sep = "_")
+detach()
+
+attach(enoe_c2)
+enoe_c2$uid = paste(upm,v_sel,n_hog,n_ren,sep = "_")
+enoe_c2$hid = paste(upm,v_sel,n_hog,sep = "_")
+enoe_c2$vid = paste(upm,v_sel,sep = "_")
+detach()
+```

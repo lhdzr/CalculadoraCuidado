@@ -1,0 +1,163 @@
+---
+title: "Generación de Base de Datos"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Liga a las tablas originales
+A través de esta <a href="https://drive.google.com/drive/u/0/folders/12xYidjNex6IJh3aR7w1qbR7jaRhjJhI7">
+liga</a> se puede acceder a los zip con las bases de datos como fueron descargadas
+de la INEGI.
+
+
+## ENUT
+
+#### Lectura de datos
+
+```{r}
+library(tidyverse)
+
+tvivienda = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tvivienda_enut_2019/conjunto_de_datos/conjunto_de_datos_tvivienda_enut_2019.csv",
+                     encoding = "utf-8")
+
+thogar = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_thogar_enut_2019/conjunto_de_datos/conjunto_de_datos_thogar_enut_2019.csv",
+                  encoding = "utf-8")
+
+tmodulo = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tmodulo_enut_2019/conjunto_de_datos/conjunto_de_datos_tmodulo_enut_2019.csv",
+                 encoding = "utf-8")
+
+tsdem = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_2019/conjunto_de_datos_tsdem_enut_2019/conjunto_de_datos/conjunto_de_datos_tsdem_enut_2019.csv",
+                   encoding = "utf-8")
+```
+
+#### Renombrar columnas con nombre importado incorrectamente
+Esta sección puede comentarse si no hubo problema de importación
+
+```{r}
+tvivienda = tvivienda %>% rename(UPM=ï..UPM)
+thogar = thogar %>% rename(UPM=ï..UPM)
+tsdem = tsdem %>% rename(UPM=ï..UPM)
+```
+
+#### Lectura de variables seleccionadas
+
+```{r}
+var_sel = read.csv("data/variables_seleccionadas.csv",encoding = "utf-8")
+```
+
+#### Definición de variables seleccionadas para cada tabla
+
+```{r}
+vars_viv = toupper(var_sel$variable[var_sel$tabla=="tvivienda"])
+vars_hog = toupper(var_sel$variable[var_sel$tabla=="thogar"])
+vars_sdm = toupper(var_sel$variable[var_sel$tabla=="tsdem"])
+vars_mod = toupper(var_sel$variable[var_sel$tabla=="tmodulo"])
+```
+
+#### Subset de las tablas usando únicamente variables seleccionadas
+
+```{r}
+tvivienda = subset(tvivienda,select = vars_viv)
+thogar = subset(thogar,select = vars_hog)
+tsdem = subset(tsdem,select = vars_sdm)
+tmodulo = subset(tmodulo,select = vars_mod)
+```
+
+#### Definición de identificadores
+
+```{r}
+tvivienda$vid = paste(tvivienda$UPM,tvivienda$VIV_SEL, sep = "_")
+
+thogar$vid = paste(thogar$UPM,thogar$VIV_SEL,sep="_")
+thogar$hid = paste(thogar$UPM,thogar$VIV_SEL,thogar$HOGAR,sep="_")
+
+tsdem$vid = paste(tsdem$UPM,tsdem$VIV_SEL,sep="_")
+tsdem$hid = paste(tsdem$UPM,tsdem$VIV_SEL,tsdem$HOGAR,sep="_")
+tsdem$uid = paste(tsdem$UPM,tsdem$VIV_SEL,tsdem$HOGAR,tsdem$N_REN,sep="_")
+
+tmodulo$vid = paste(tmodulo$UPM,tmodulo$VIV_SEL,sep="_")
+tmodulo$hid = paste(tmodulo$UPM,tmodulo$VIV_SEL,tmodulo$HOGAR,sep="_")
+tmodulo$uid = paste(tmodulo$UPM,tmodulo$VIV_SEL,tmodulo$HOGAR,tmodulo$N_REN,sep="_")
+```
+
+## ENOE
+
+#### Lectura de la ENOE
+
+```{r}
+enoe_c1 = read_csv("data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe1_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe1_enoen_2022_2t.csv")
+enoe_c2 = read_csv("data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe2_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe2_enoen_2022_2t.csv")
+```
+
+#### Selección de variables en las tablas
+
+```{r}
+vars_c1 = var_sel$variable[var_sel$encuesta=="ENOE" & var_sel$tabla=="coe1"]
+enoe_c1 = subset(enoe_c1,select = vars_c1)
+
+vars_c2 = var_sel$variable[var_sel$encuesta=="ENOE" & var_sel$tabla=="coe2"]
+enoe_c2 = subset(enoe_c2,select = vars_c2)
+```
+
+#### Definición de identificadores
+
+```{r}
+attach(enoe_c1)
+enoe_c1$uid = paste(upm,v_sel,n_hog,n_ren,sep = "_")
+enoe_c1$hid = paste(upm,v_sel,n_hog,sep = "_")
+enoe_c1$vid = paste(upm,v_sel,sep = "_")
+detach()
+
+attach(enoe_c2)
+enoe_c2$uid = paste(upm,v_sel,n_hog,n_ren,sep = "_")
+enoe_c2$hid = paste(upm,v_sel,n_hog,sep = "_")
+enoe_c2$vid = paste(upm,v_sel,sep = "_")
+detach()
+```
+#### Modificación de variables
+###### SEXO
+Se recodifica de 1 y 2, a 0 y 1.
+```{r}
+tsdem$SEXO[tsdem$SEXO==1]=0
+tsdem$SEXO[tsdem$SEXO==2]=1
+```
+
+###### 
+
+
+#### Creación de variables adicionales
+###### Años de escolaridad
+Para calcular años de escolaridad utilizando la ENUT, se utilizan las variables
+de nivel académico y grado escolar, <code>NIV</code> y <code>GRA</code>. A 
+continuación se genera un tabulado que relaciona el grado escolar completado con
+los años de educación cursados. 
+
+###### Salario por semana
+Se utiliza también un tabulado similar para generar un número entre el cual se 
+dividirá el salario de la persona para estandarizar salarios a salario por semana.
+
+
+
+#### Unión de tablas
+```{r}
+tab_esc <- data.frame(NIV=c(0:10,99),ESC=c(0,0,0,6,9,9,9,12,12,16,16,0))
+tab_sal <- data.frame(P5_7A=c(1,2,3,4), DIVISOR_SALARIO = c(1,2,4,52))
+
+enut <- left_join(tmodulo,tsdem,on="uid") %>%
+  left_join(thogar,on="hid") %>%
+  left_join(tvivienda,on="vid") %>%
+  full_join(tab_esc,on="NIV") %>%
+  full_join(tab_sal,on="P5_7A") %>%
+  mutate(ESC=ESC+GRA, SAL_SEM=P5_7/DIVISOR_SALARIO)
+```
+
+
+
+
+#### Guardar bases
+```{r}
+#write.csv(enoe_c1,"C:/")
+```
+
