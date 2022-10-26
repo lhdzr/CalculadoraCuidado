@@ -83,9 +83,9 @@ enut$EXP = enut$EDAD -
 enut %>% mutate(EXP = ifelse(NIV == "WI" & Name == "John_Smith", "John_Smith1", Name))
   
   
-genero,edad,escolaridad,experiencia, experiencia al cuadradoo
-SEXO,EDAD,,,
-DEPENDIENTE salario
+#genero,edad,escolaridad,experiencia, experiencia al cuadradoo
+#SEXO,EDAD,,,
+#DEPENDIENTE salario
 enut$p3_4
 lm()
 
@@ -108,7 +108,13 @@ cuid_hog %>%
                              p6b1 == 8 ~ NA_real_))
 
 
-enut$TIEMPO_TOTAL = sum(P6_15A_1_1,P6_15A_1_3,P6_15A_2_1,P6_15A_2_3,P6_15A_3_1,P6_15A_3_3,P6_15A_4_1,P6_15A_4_3)#+sum(P6_15A_1_2,P6_15A_1_4,P6_15A_2_2,P6_15A_2_4,P6_15A_3_2,P6_15A_3_4,P6_15A_4_2,P6_15A_4_4)/60
 
+enut$TIEMPO_CUID <- rowSums(enut[,c("P6_15A_1_1","P6_15A_1_3","P6_15A_4_1","P6_15A_4_3","P6_11A_02_1","P6_11A_02_3","P6_11A_03_1","P6_11A_03_3","P6_11A_09_1","P6_11A_09_3","P6_11A_11_1","P6_11A_11_3")],na.rm = TRUE) + rowSums(enut[,c("P6_15A_1_2","P6_15A_1_4","P6_15A_4_2","P6_15A_4_4","P6_11A_02_2","P6_11A_02_4","P6_11A_03_2","P6_11A_03_4","P6_11A_09_2","P6_11A_09_4","P6_11A_11_2","P6_11A_11_4")],na.rm = TRUE)/60
+enut$TIEMPO_ENF_TEC <- rowSums(enut[,c("P6_11A_01_1","P6_11A_01_3","P6_11A_05_1","P6_11A_05_3")],na.rm = TRUE) + rowSums(enut[,c("P6_11A_01_2","P6_11A_01_4","P6_11A_05_2","P6_11A_05_4")],na.rm = TRUE)/60
+enut$TIEMPO_FISIO <- rowSums(enut[,c("P6_11A_07_1","P6_11A_07_3")],na.rm = TRUE) + rowSums(enut[,c("P6_11A_07_2","P6_11A_07_4")],na.rm = TRUE)/60
+enut$TIEMPO_CHOF <- rowSums(enut[,c("P6_15A_2_1","P6_15A_2_3","P6_15A_3_1","P6_15A_3_3","P6_11A_06_1","P6_11A_06_3","P6_11A_08_1","P6_11A_08_3")],na.rm = TRUE) + rowSums(enut[,c("P6_15A_2_2","P6_15A_2_4","P6_15A_3_2","P6_15A_3_4","P6_11A_06_2","P6_11A_06_4","P6_11A_08_2","P6_11A_08_4")],na.rm = TRUE)/60
+enut$TIEMPO_COCIN <- rowSums(enut[,c("P6_11A_04_1","P6_11A_04_3")],na.rm = TRUE) + rowSums(enut[,c("P6_11A_04_2","P6_11A_04_4")],na.rm = TRUE)/60
+enut$TIEMPO_TOTAL <- rowSums(enut[,c("P6_15A_1_1","P6_15A_1_3","P6_15A_2_1","P6_15A_2_3","P6_15A_3_1","P6_15A_3_3","P6_15A_4_1","P6_15A_4_3","P6_11A_01_1","P6_11A_01_3","P6_11A_02_1","P6_11A_02_3","P6_11A_03_1","P6_11A_03_3","P6_11A_04_1","P6_11A_04_3","P6_11A_05_1","P6_11A_05_3","P6_11A_06_1","P6_11A_06_3","P6_11A_07_1","P6_11A_07_3","P6_11A_08_1","P6_11A_08_3","P6_11A_09_1","P6_11A_09_3","P6_11A_11_1","P6_11A_11_3")], na.rm=TRUE) + rowSums(enut[,c("P6_15A_1_2","P6_15A_1_4","P6_15A_2_2","P6_15A_2_4","P6_15A_3_2","P6_15A_3_4","P6_15A_4_2","P6_15A_4_4","P6_11A_01_2","P6_11A_01_4","P6_11A_02_2","P6_11A_02_4","P6_11A_03_2","P6_11A_03_4","P6_11A_04_2","P6_11A_04_4","P6_11A_05_2","P6_11A_05_4","P6_11A_06_2","P6_11A_06_4","P6_11A_07_2","P6_11A_07_4","P6_11A_08_2","P6_11A_08_4","P6_11A_09_2","P6_11A_09_4","P6_11A_11_2","P6_11A_11_4")], na.rm = TRUE)/60
 attach(enut)
+
 lm()
