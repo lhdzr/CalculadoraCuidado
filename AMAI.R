@@ -22,15 +22,15 @@ tsdem = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_20
 
 ### Lectura de variables seleccionadas
 
-var_sel = read.csv("data/variables_seleccionadas - Bases de datos .csv",encoding = "utf-8")
+var_sel = read.csv("data/variables_seleccionadas.csv",encoding = "utf-8")
 
 
 #### Definición de variables seleccionadas para cada tabla
 
-vars_viv = toupper(var_sel$Variable[var_sel$Tabla=="tvivienda"])
-vars_hog = toupper(var_sel$Variable[var_sel$Tabla=="thogar"])
-vars_sdm = toupper(var_sel$Variable[var_sel$Tabla=="tsdem"])
-vars_mod = toupper(var_sel$Variable[var_sel$Tabla=="tmodulo"])
+vars_viv = toupper(var_sel$variable[var_sel$tabla=="tvivienda"])
+vars_hog = toupper(var_sel$variable[var_sel$tabla=="thogar"])
+vars_sdm = toupper(var_sel$variable[var_sel$tabla=="tsdem"])
+vars_mod = toupper(var_sel$variable[var_sel$tabla=="tmodulo"])
 
 
 #### Subset de las tablas usando únicamente variables seleccionadas
@@ -65,12 +65,10 @@ tmodulo$uid = paste(tmodulo$UPM,tmodulo$VIV_SEL,tmodulo$HOGAR,tmodulo$N_REN,sep=
 #  full_join(tab_sal,on="P5_7A") %>%
 #  mutate(ESC=ESC+GRA, SAL_SEM=P5_7/DIVISOR_SALARIO)
 
-#Transformar variables a dummies (pregunta 2-5 de la AMAI, falta la 1 y 6)
+#Transformar variables a dummies y categóricas
 
-## Jefe de hogar (1 es sí es jefe de hogar y 0 no)
-tsdem$jefehog<- (tsdem$PAREN == "1")*1
+## Pregunta 1: Transformar nivel y grado a escolaridad
 
-#Transformar nivel y grado a escolaridad
 tmodulo$nivelescolar<- ifelse(tmodulo$NIV<=1, "No estudió",
                        ifelse(tmodulo$NIV==2 & tmodulo$GRA<6, "Primaria incompleta",
                        ifelse(tmodulo$NIV==2 & tmodulo$GRA>=6, "Primaria completa",
@@ -84,16 +82,16 @@ tmodulo$nivelescolar<- ifelse(tmodulo$NIV<=1, "No estudió",
                        ifelse(tmodulo$NIV==8 & tmodulo$GRA>=5, "Licenciatura completa",
                        ifelse(tmodulo$NIV==9, "Diplomado o maestría", "NA"))))))))))))
 
-## Baño en vivienda (1 es sí y 0 no)
+## Pregunta 2: Baño en vivienda (1 es sí y 0 no)
 tvivienda$sanitarioviv<- (tvivienda$P1_7 == "1")*1
 
-##Automovil (1 es sí y 0 no)
+## Pregunta 3: Automovil (1 es sí y 0 no)
 thogar$automovilhog<- (thogar$P2_5_09 == "1")*1
 
-## Internet (1 es sí y 0 no)
+## Pregunta 4: Internet (1 es sí y 0 no)
 thogar$internethog<- (thogar$P2_5_14 == "1")*1 
 
-##Trabajas o no (1 es sí y 0 no)
+##Pregunta 5: Trabajas o no (1 es sí y 0 no)
 tmodulo$trabajaper<- (tmodulo$P5_1 =="1")*1 
 
 #Agrupar por hogar 
@@ -104,51 +102,92 @@ thogar= left_join(thogar,trabaj_hogar,on="hid")
 
 #Crear variable de puntaje por pregunta
 
-## Jefe de hogar (1 es sí es jefe de hogar y 0 no)
-## Puntaje de nivel escolaridad 
+## 1. Puntaje de nivel escolaridad 
 
-tmodulo %>% 
-  mutate(case_when(nivelescolar=="No estudió"~0,
-                   nivelescolar=="Primaria incompleta"~6, 
-                   nivelescolar=="Primaria completa"~ 11, 
-                   nivelescolar=="Secundaria incompleta"~ 12,
-                   nivelescolar=="Secundaria completa"~18,
-                   nivelescolar=="Preparatoria incompleta"~23,
-                   nivelescolar=="Preparatoria completa"~27, 
-                   nivelescolar=="Licenciatura incompleta"~36,
-                   nivelescolar=="Licenciatura completa"~59,
-                   nivelescolar=="Diplomado o maestría"~85))
+tmodulo$puntos_nivel<- ifelse(tmodulo$nivelescolar=="No estudió",0,
+                           ifelse(tmodulo$nivelescolar=="Primaria incompleta",6,
+                           ifelse(tmodulo$nivelescolar=="Primaria completa",11,
+                           ifelse(tmodulo$nivelescolar=="Secundaria incompleta",12,
+                           ifelse(tmodulo$nivelescolar=="Secundaria completa",18,
+                           ifelse(tmodulo$nivelescolar=="Preparatoria incompleta",23,
+                           ifelse(tmodulo$nivelescolar=="Preparatoria completa",27,
+                           ifelse(tmodulo$nivelescolar=="Licenciatura incompleta",36,
+                           ifelse(tmodulo$nivelescolar=="Licenciatura completa",59,
+                           ifelse(tmodulo$nivelescolar=="Diplomado o maestría",85, 0))))))))))
 
-## Baño en vivienda
-tvivienda$puntosbaño<- ifelse(tvivienda$sanitarioviv == "1", 24, 0)
+#tmodulo %>% 
+#  mutate(case_when(nivelescolar=="No estudió"~0,
+#                   nivelescolar=="Primaria incompleta"~6, 
+#                   nivelescolar=="Primaria completa"~ 11, 
+#                   nivelescolar=="Secundaria incompleta"~ 12,
+#                   nivelescolar=="Secundaria completa"~18,
+#                   nivelescolar=="Preparatoria incompleta"~23,
+#                   nivelescolar=="Preparatoria completa"~27, 
+#                   nivelescolar=="Licenciatura incompleta"~36,
+#                   nivelescolar=="Licenciatura completa"~59,
+#                   nivelescolar=="Diplomado o maestría"~85))
 
-##Automovil
-thogar$puntosautomovil<- ifelse(thogar$automovilhog == "1", 22, 0)
 
-## Internet
-thogar$puntosinternet<- ifelse(thogar$internethog == "1", 32, 0)
+## 2. Baño en vivienda
+tvivienda$puntos_baño<- ifelse(tvivienda$sanitarioviv == "1", 24, 0)
 
-#Cuartos
-tvivienda$puntoscuartos<- ifelse(tvivienda$P1_3=="1", 8,
+## 3. Automovil
+thogar$punto_automovil<- ifelse(thogar$automovilhog == "1", 22, 0)
+
+## 4. Internet
+thogar$puntos_internet<- ifelse(thogar$internethog == "1", 32, 0)
+
+## 5. Cuartos
+tvivienda$puntos_cuartos<- ifelse(tvivienda$P1_3=="1", 8,
                           ifelse(tvivienda$P1_3=="2", 16,
                           ifelse(tvivienda$P1_3=="3", 24, 
                           ifelse(tvivienda$P1_3>="4", 32, 0))))
 
-#Trabajadores por hogar 
-#Cuartos
+## 6. Trabajadores por hogar 
 
 thogar$puntostrab<- ifelse(thogar$num_trab=="0", 0,
                     ifelse(thogar$num_trab=="1", 15,
                     ifelse(thogar$num_trab=="2", 31,
                     ifelse(thogar$num_trab=="3", 46,
-                    ifelse(thogar$num_trab>="4", 61, "NA")))))
+                    ifelse(thogar$num_trab>="4", 61, 0)))))
+
+#UNIR TODO
+
+tab_esc <- data.frame(NIV=c(0:10,99),ESC=c(0,0,0,6,9,9,9,12,12,16,16,0))
+tab_sal <- data.frame(P5_7A=c(1,2,3,4), DIVISOR_SALARIO = c(1,2,4,52))
+
+enut <- left_join(tmodulo,tsdem,on="uid") %>%
+  left_join(thogar,on="hid") %>%
+  left_join(tvivienda,on="vid") %>%
+  full_join(tab_esc,on="NIV") %>%
+  full_join(tab_sal,on="P5_7A") %>%
+  mutate(ESC=ESC+GRA, SAL_SEM=P5_7/DIVISOR_SALARIO)
 
 #Puntaje final 
 
+attach(enut)
+enut$Puntaje_AMAI<- puntos_nivel+ puntos_baño+ punto_automovil+ puntos_internet+ puntos_cuartos+puntostrab
+#enut$Puntaje_AMAI<- sum(Puntos_nivel, puntos_baño, punto_automovil, puntos_internet, puntos_cuartos, puntostrab, na.rm=TRUE)
 
 #Puntaje a Nivel Socioeconómico 
 
-thogar$puntoscuartos<- ifelse(tvivienda$P1_3=="1", 8,
-                                 ifelse(tvivienda$P1_3=="2", 16,
-                                        ifelse(tvivienda$P1_3=="3", 24, 
-                                               ifelse(tvivienda$P1_3>="4", 32, 0))))
+attach(enut)
+enut$clasif_AMAI<- ifelse(Puntaje_AMAI>=0 & Puntaje_AMAI<=47, "E",
+                   ifelse(Puntaje_AMAI>=48 & Puntaje_AMAI<=94, "D",
+                   ifelse(Puntaje_AMAI>=95 & Puntaje_AMAI<=115, "D+",
+                   ifelse(Puntaje_AMAI>=116 & Puntaje_AMAI<=140, "C-",
+                   ifelse(Puntaje_AMAI>=141 & Puntaje_AMAI<=167, "C",
+                   ifelse(Puntaje_AMAI>=168 & Puntaje_AMAI<=201, "C+",
+                   ifelse(Puntaje_AMAI>=202, "A/B", "NA")))))))
+
+attach(enut)
+enut$salarioprom_AMAI<- ifelse(clasif_AMAI=="E", 6200,
+                        ifelse(clasif_AMAI=="D", 8900,
+                        ifelse(clasif_AMAI=="D+", 11900,
+                        ifelse(clasif_AMAI=="C-", 15000,
+                        ifelse(clasif_AMAI=="C", 18800,
+                        ifelse(clasif_AMAI=="C+", 26300,
+                        ifelse(clasif_AMAI=="A/B", 40500, "NA")))))))
+
+#Comparar con Salario promedio por Nivel 
+tapply(enut$SAL_SEM, enut$clasif_AMAI, summary)

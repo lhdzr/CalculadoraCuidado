@@ -124,8 +124,117 @@ tsdem$SEXO[tsdem$SEXO==1]=0
 tsdem$SEXO[tsdem$SEXO==2]=1
 ```
 
-###### 
+######AMAI
 
+#Transformar variables a dummies y categóricas
+
+## Pregunta 1: Transformar nivel y grado a escolaridad
+
+Para crear una variable de nivel de escolaridad como en el AMIB se usan las variables de nivel y grado de la ENUT. 
+
+```{r}
+tmodulo$nivelescolar<- ifelse(tmodulo$NIV<=1, "No estudió",
+                       ifelse(tmodulo$NIV==2 & tmodulo$GRA<6, "Primaria incompleta",
+                       ifelse(tmodulo$NIV==2 & tmodulo$GRA>=6, "Primaria completa",
+                       ifelse(tmodulo$NIV==3 & tmodulo$GRA<3, "Secundaria incompleta",
+                       ifelse(tmodulo$NIV==3 & tmodulo$GRA>=3, "Secundaria completa",
+                       ifelse(tmodulo$NIV==4, "Secundaria completa",
+                       ifelse(tmodulo$NIV==5|tmodulo$NIV==7, "Preparatoria completa",
+                       ifelse(tmodulo$NIV==6 & tmodulo$GRA<3, "Preparatoria incompleta",
+                       ifelse(tmodulo$NIV==6 & tmodulo$GRA>=3, "Preparatoria completa",
+                       ifelse(tmodulo$NIV==8 & tmodulo$GRA<5, "Licenciatura incompleta",
+                       ifelse(tmodulo$NIV==8 & tmodulo$GRA>=5, "Licenciatura completa",
+                       ifelse(tmodulo$NIV==9, "Diplomado o maestría", "NA"))))))))))))
+```
+
+## Pregunta 2: Baño en vivienda (1 es sí y 0 no)
+
+```{r}
+tvivienda$sanitarioviv<- (tvivienda$P1_7 == "1")*1
+```
+
+## Pregunta 3: Automovil (1 es sí y 0 no)
+
+```{r}
+thogar$automovilhog<- (thogar$P2_5_09 == "1")*1
+```
+
+## Pregunta 4: Internet (1 es sí y 0 no)
+
+```{r}
+thogar$internethog<- (thogar$P2_5_14 == "1")*1
+```
+
+##Pregunta 5: Trabajas o no (1 es sí y 0 no)
+
+```{r}
+tmodulo$trabajaper<- (tmodulo$P5_1 =="1")*1 
+```
+
+#Agrupar por hogar 
+```{r}
+trabaj_hogar <- aggregate.data.frame(tmodulo$P5_1, by=list(tmodulo$hid),FUN=sum) %>%
+rename(hid=Group.1,num_trab=x)
+
+thogar= left_join(thogar,trabaj_hogar,on="hid")
+```
+
+#Crear variable de puntaje por pregunta
+
+La AMAI da puntos por cada pregunta 
+
+## 1. Puntaje de nivel escolaridad 
+
+```{r}
+tmodulo$puntos_nivel<- ifelse(tmodulo$nivelescolar=="No estudió",0,
+                           ifelse(tmodulo$nivelescolar=="Primaria incompleta",6,
+                           ifelse(tmodulo$nivelescolar=="Primaria completa",11,
+                           ifelse(tmodulo$nivelescolar=="Secundaria incompleta",12,
+                           ifelse(tmodulo$nivelescolar=="Secundaria completa",18,
+                           ifelse(tmodulo$nivelescolar=="Preparatoria incompleta",23,
+                           ifelse(tmodulo$nivelescolar=="Preparatoria completa",27,
+                           ifelse(tmodulo$nivelescolar=="Licenciatura incompleta",36,
+                           ifelse(tmodulo$nivelescolar=="Licenciatura completa",59,
+                           ifelse(tmodulo$nivelescolar=="Diplomado o maestría",85, 0))))))))))
+```
+
+## 2. Baño en vivienda
+
+```{r}
+tvivienda$puntos_baño<- ifelse(tvivienda$sanitarioviv == "1", 24, 0)
+```
+
+## 3. Automovil
+
+```{r}
+thogar$punto_automovil<- ifelse(thogar$automovilhog == "1", 22, 0)
+
+```
+
+## 4. Internet
+
+```{r}
+thogar$puntos_internet<- ifelse(thogar$internethog == "1", 32, 0)
+```
+
+## 5. Cuartos
+
+```{r}
+tvivienda$puntos_cuartos<- ifelse(tvivienda$P1_3=="1", 8,
+                          ifelse(tvivienda$P1_3=="2", 16,
+                          ifelse(tvivienda$P1_3=="3", 24, 
+                          ifelse(tvivienda$P1_3>="4", 32, 0))))
+```
+
+## 6. Trabajadores por hogar 
+
+```{r}
+thogar$puntostrab<- ifelse(thogar$num_trab=="0", 0,
+                    ifelse(thogar$num_trab=="1", 15,
+                    ifelse(thogar$num_trab=="2", 31,
+                    ifelse(thogar$num_trab=="3", 46,
+                    ifelse(thogar$num_trab>="4", 61, 0)))))
+```
 
 #### Creación de variables adicionales
 ###### Años de escolaridad
@@ -153,7 +262,44 @@ enut <- left_join(tmodulo,tsdem,on="uid") %>%
   mutate(ESC=ESC+GRA, SAL_SEM=P5_7/DIVISOR_SALARIO)
 ```
 
+##Creación de variables finales AMAI
+#Puntaje final 
 
+```{r}
+attach(enut)
+enut$Puntaje_AMAI<- puntos_nivel+ puntos_baño+ punto_automovil+ puntos_internet+ puntos_cuartos+puntostrab
+```
+
+#Puntaje a Nivel Socioeconómico 
+
+```{r}
+attach(enut)
+enut$clasif_AMAI<- ifelse(Puntaje_AMAI>=0 & Puntaje_AMAI<=47, "E",
+                   ifelse(Puntaje_AMAI>=48 & Puntaje_AMAI<=94, "D",
+                   ifelse(Puntaje_AMAI>=95 & Puntaje_AMAI<=115, "D+",
+                   ifelse(Puntaje_AMAI>=116 & Puntaje_AMAI<=140, "C-",
+                   ifelse(Puntaje_AMAI>=141 & Puntaje_AMAI<=167, "C",
+                   ifelse(Puntaje_AMAI>=168 & Puntaje_AMAI<=201, "C+",
+                   ifelse(Puntaje_AMAI>=202, "A/B", "NA")))))))
+```
+
+#Salario por Nivel Socioeconómico 
+
+```{r}
+attach(enut)
+enut$salarioprom_AMAI<- ifelse(clasif_AMAI=="E", 6200,
+                        ifelse(clasif_AMAI=="D", 8900,
+                        ifelse(clasif_AMAI=="D+", 11900,
+                        ifelse(clasif_AMAI=="C-", 15000,
+                        ifelse(clasif_AMAI=="C", 18800,
+                        ifelse(clasif_AMAI=="C+", 26300,
+                        ifelse(clasif_AMAI=="A/B", 40500, "NA")))))))
+```
+
+#Comparar con Salario promedio por Nivel 
+```{r}
+tapply(enut$SAL_SEM, enut$clasif_AMAI, summary)
+```
 
 
 #### Guardar bases
