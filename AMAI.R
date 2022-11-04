@@ -104,16 +104,22 @@ thogar= left_join(thogar,trabaj_hogar,on="hid")
 
 ## 1. Puntaje de nivel escolaridad 
 
-tmodulo$puntos_nivel<- ifelse(tmodulo$nivelescolar=="No estudió",0,
-                           ifelse(tmodulo$nivelescolar=="Primaria incompleta",6,
-                           ifelse(tmodulo$nivelescolar=="Primaria completa",11,
-                           ifelse(tmodulo$nivelescolar=="Secundaria incompleta",12,
-                           ifelse(tmodulo$nivelescolar=="Secundaria completa",18,
-                           ifelse(tmodulo$nivelescolar=="Preparatoria incompleta",23,
-                           ifelse(tmodulo$nivelescolar=="Preparatoria completa",27,
-                           ifelse(tmodulo$nivelescolar=="Licenciatura incompleta",36,
-                           ifelse(tmodulo$nivelescolar=="Licenciatura completa",59,
-                           ifelse(tmodulo$nivelescolar=="Diplomado o maestría",85, 0))))))))))
+jefes= filter(tsdem, PAREN==1) %>%
+  left_join(tmodulo, on="uid") %>%
+  select(c("nivelescolar", "hid"))
+
+thogar=left_join(thogar, jefes, on="hid")
+
+thogar$puntos_nivel<- ifelse(thogar$nivelescolar=="No estudió",0,
+                      ifelse(thogar$nivelescolar=="Primaria incompleta",6,
+                      ifelse(thogar$nivelescolar=="Primaria completa",11,
+                      ifelse(thogar$nivelescolar=="Secundaria incompleta",12,
+                      ifelse(thogar$nivelescolar=="Secundaria completa",18,
+                      ifelse(thogar$nivelescolar=="Preparatoria incompleta",23,
+                      ifelse(thogar$nivelescolar=="Preparatoria completa",27,
+                      ifelse(thogar$nivelescolar=="Licenciatura incompleta",36,
+                      ifelse(thogar$nivelescolar=="Licenciatura completa",59,
+                      ifelse(thogar$nivelescolar=="Diplomado o maestría",85, 0))))))))))
 
 #tmodulo %>% 
 #  mutate(case_when(nivelescolar=="No estudió"~0,
@@ -167,7 +173,7 @@ enut <- left_join(tmodulo,tsdem,on="uid") %>%
 
 attach(enut)
 enut$Puntaje_AMAI<- puntos_nivel+ puntos_baño+ punto_automovil+ puntos_internet+ puntos_cuartos+puntostrab
-#enut$Puntaje_AMAI<- sum(Puntos_nivel, puntos_baño, punto_automovil, puntos_internet, puntos_cuartos, puntostrab, na.rm=TRUE)
+
 
 #Puntaje a Nivel Socioeconómico 
 
@@ -191,3 +197,12 @@ enut$salarioprom_AMAI<- ifelse(clasif_AMAI=="E", 6200,
 
 #Comparar con Salario promedio por Nivel 
 tapply(enut$SAL_SEM, enut$clasif_AMAI, summary)
+
+
+#PRUEBA 
+
+jefes= filter(tsdem, PAREN==1) %>%
+  left_join(tmodulo, on="uid") %>%
+  select(c("nivelescolar", "hid"))
+
+thogar=left_join(thogar, jefes, on="hid")

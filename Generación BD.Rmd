@@ -11,6 +11,11 @@ A través de esta <a href="https://drive.google.com/drive/u/0/folders/12xYidjNex
 liga</a> se puede acceder a los zip con las bases de datos como fueron descargadas
 de la INEGI.
 
+```{r}
+library(fastDummies)
+library(MatchIt)
+```
+
 
 ## ENUT
 
@@ -122,7 +127,21 @@ Se recodifica de 1 y 2, a 0 y 1.
 ```{r}
 tsdem$SEXO[tsdem$SEXO==1]=0
 tsdem$SEXO[tsdem$SEXO==2]=1
+
+tmodulo$FP6_11[tmodulo$FP6_11==2]=1
+tmodulo$FP6_11[tmodulo$FP6_11==3]=0
+
+tmodulo$FP6_15[tmodulo$FP6_15==2]=1
+tmodulo$FP6_15[tmodulo$FP6_15==3]=0
 ```
+
+## Modificación de entidad
+
+```{r}
+tmodulo= dummy_cols(tmodulo,select_columns="ENT")
+```
+
+##Modificar
 
 ######AMAI
 
@@ -145,6 +164,8 @@ tmodulo$nivelescolar<- ifelse(tmodulo$NIV<=1, "No estudió",
                        ifelse(tmodulo$NIV==8 & tmodulo$GRA<5, "Licenciatura incompleta",
                        ifelse(tmodulo$NIV==8 & tmodulo$GRA>=5, "Licenciatura completa",
                        ifelse(tmodulo$NIV==9, "Diplomado o maestría", "NA"))))))))))))
+
+
 ```
 
 ## Pregunta 2: Baño en vivienda (1 es sí y 0 no)
@@ -183,20 +204,29 @@ thogar= left_join(thogar,trabaj_hogar,on="hid")
 
 La AMAI da puntos por cada pregunta 
 
-## 1. Puntaje de nivel escolaridad 
+## 1. Puntaje de nivel escolaridad por jefe
 
 ```{r}
-tmodulo$puntos_nivel<- ifelse(tmodulo$nivelescolar=="No estudió",0,
-                           ifelse(tmodulo$nivelescolar=="Primaria incompleta",6,
-                           ifelse(tmodulo$nivelescolar=="Primaria completa",11,
-                           ifelse(tmodulo$nivelescolar=="Secundaria incompleta",12,
-                           ifelse(tmodulo$nivelescolar=="Secundaria completa",18,
-                           ifelse(tmodulo$nivelescolar=="Preparatoria incompleta",23,
-                           ifelse(tmodulo$nivelescolar=="Preparatoria completa",27,
-                           ifelse(tmodulo$nivelescolar=="Licenciatura incompleta",36,
-                           ifelse(tmodulo$nivelescolar=="Licenciatura completa",59,
-                           ifelse(tmodulo$nivelescolar=="Diplomado o maestría",85, 0))))))))))
+jefes= filter(tsdem, PAREN==1) %>%
+  left_join(tmodulo, on="uid") %>%
+  select(c("nivelescolar", "hid"))
+
+thogar=left_join(thogar, jefes, on="hid")
 ```
+
+```{r}
+thogar$puntos_nivel<- ifelse(thogar$nivelescolar=="No estudió",0,
+                      ifelse(thogar$nivelescolar=="Primaria incompleta",6,
+                      ifelse(thogar$nivelescolar=="Primaria completa",11,
+                      ifelse(thogar$nivelescolar=="Secundaria incompleta",12,
+                      ifelse(thogar$nivelescolar=="Secundaria completa",18,
+                      ifelse(thogar$nivelescolar=="Preparatoria incompleta",23,
+                      ifelse(thogar$nivelescolar=="Preparatoria completa",27,
+                      ifelse(thogar$nivelescolar=="Licenciatura incompleta",36,
+                      ifelse(thogar$nivelescolar=="Licenciatura completa",59,
+                      ifelse(thogar$nivelescolar=="Diplomado o maestría",85, 0))))))))))
+```
+
 
 ## 2. Baño en vivienda
 
@@ -251,7 +281,7 @@ dividirá el salario de la persona para estandarizar salarios a salario por sema
 
 #### Unión de tablas
 ```{r}
-tab_esc <- data.frame(NIV=c(0:10,99),ESC=c(0,0,0,6,9,9,9,12,12,16,16,0))
+tab_esc <- data.frame(NIV=c(0:9),ESC=c(0,0,0,6,9,9,9,12,12,16))
 tab_sal <- data.frame(P5_7A=c(1,2,3,4), DIVISOR_SALARIO = c(1,2,4,52))
 
 enut <- left_join(tmodulo,tsdem,on="uid") %>%
@@ -300,6 +330,38 @@ enut$salarioprom_AMAI<- ifelse(clasif_AMAI=="E", 6200,
 ```{r}
 tapply(enut$SAL_SEM, enut$clasif_AMAI, summary)
 ```
+
+### Imputación de datos 
+
+```{r}
+imputados<-missRanger(enut, SAL_SEM ~ .,num.trees = 1000, seed =1)
+
+```
+
+```{r}
+ggplot()+
+  geom_point(data = imputados, aes(ESC,SAL_SEM),
+             color="red")+
+  geom_point(data = enut, aes(ESC,SAL_SEM))+
+  theme_minimal()
+
+
+```
+
+###Modelos
+
+```{r}
+lm.enut = lm(SAL_SEM ~ EDAD+ SEXO+ ESC,data = enut)
+summary(lm.enut)
+```
+
+```{r}
+lm.imputados = lm(SAL_SEM ~ EDAD+ SEXO+ ESC,data = imputados)
+summary(lm.imputados)
+```
+
+
+
 
 
 #### Guardar bases
