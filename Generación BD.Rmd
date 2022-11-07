@@ -87,40 +87,6 @@ tmodulo$hid = paste(tmodulo$UPM,tmodulo$VIV_SEL,tmodulo$HOGAR,sep="_")
 tmodulo$uid = paste(tmodulo$UPM,tmodulo$VIV_SEL,tmodulo$HOGAR,tmodulo$N_REN,sep="_")
 ```
 
-## ENOE
-
-#### Lectura de la ENOE
-
-```{r}
-enoe_c1 = read_csv("data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe1_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe1_enoen_2022_2t.csv")
-enoe_c2 = read_csv("data/conjunto_de_datos_enoen_2022_2t_csv/conjunto_de_datos_coe2_enoen_2022_2t/conjunto_de_datos/conjunto_de_datos_coe2_enoen_2022_2t.csv")
-```
-
-#### Selección de variables en las tablas
-
-```{r}
-vars_c1 = var_sel$variable[var_sel$encuesta=="ENOE" & var_sel$tabla=="coe1"]
-enoe_c1 = subset(enoe_c1,select = vars_c1)
-
-vars_c2 = var_sel$variable[var_sel$encuesta=="ENOE" & var_sel$tabla=="coe2"]
-enoe_c2 = subset(enoe_c2,select = vars_c2)
-```
-
-#### Definición de identificadores
-
-```{r}
-attach(enoe_c1)
-enoe_c1$uid = paste(upm,v_sel,n_hog,n_ren,sep = "_")
-enoe_c1$hid = paste(upm,v_sel,n_hog,sep = "_")
-enoe_c1$vid = paste(upm,v_sel,sep = "_")
-detach()
-
-attach(enoe_c2)
-enoe_c2$uid = paste(upm,v_sel,n_hog,n_ren,sep = "_")
-enoe_c2$hid = paste(upm,v_sel,n_hog,sep = "_")
-enoe_c2$vid = paste(upm,v_sel,sep = "_")
-detach()
-```
 #### Modificación de variables
 ###### SEXO
 Se recodifica de 1 y 2, a 0 y 1.
@@ -136,12 +102,11 @@ tmodulo$FP6_15[tmodulo$FP6_15==3]=0
 ```
 
 ## Modificación de entidad
-
+Se recodifica entidad como una variable dummy
 ```{r}
 tmodulo= dummy_cols(tmodulo,select_columns="ENT")
 ```
 
-##Modificar
 
 ######AMAI
 
@@ -193,6 +158,8 @@ tmodulo$trabajaper<- (tmodulo$P5_1 =="1")*1
 ```
 
 #Agrupar por hogar 
+Se agrupan todos los trabajadores por hogar 
+
 ```{r}
 trabaj_hogar <- aggregate.data.frame(tmodulo$P5_1, by=list(tmodulo$hid),FUN=sum) %>%
 rename(hid=Group.1,num_trab=x)
@@ -205,6 +172,8 @@ thogar= left_join(thogar,trabaj_hogar,on="hid")
 La AMAI da puntos por cada pregunta 
 
 ## 1. Puntaje de nivel escolaridad por jefe
+Como la AMAI pregunta escolaridad del jefe de hogar, se realizó un filtro por jefe y se unió dichos jefes a la columna de nivel de escolaridad que se encuentra en tmodulo. Despues de unió estos a t hogar, para asignar por hogar un nivel de escolaridad dependiendo del jefe. 
+
 
 ```{r}
 jefes= filter(tsdem, PAREN==1) %>%
@@ -294,6 +263,9 @@ enut <- left_join(tmodulo,tsdem,on="uid") %>%
 
 ##Creación de variables finales AMAI
 #Puntaje final 
+
+PROFESOR aquí tengo la duda, no sé si estan juntando mal las tablas o hay muchos NAs, porque cuando corro el de puntaje AMAI me salen NAs por hogar, cuando todos en el mismo hogar deberian tener un mismo puntaje. 
+
 
 ```{r}
 attach(enut)
