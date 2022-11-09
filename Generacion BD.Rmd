@@ -338,6 +338,6 @@ summary(lm.imputados)
 
 #### Guardar bases
 ```{r}
-#write.csv(enoe_c1,"C:/")
+write.csv(enut,"products/csv/enut.csv")
 ```
 

@@ -4,14 +4,14 @@ enut=read.csv("products/csv/enut.csv")
 enut = enut %>%
   mutate(X=NULL)
 
-par_var_x = c("SEXO","EDAD","ESC")
+par_var_x = c("SEXO","EDAD","ESC","TIEMPO_TOTAL","PAREN")
 ncols_vars_x = length(par_var_x)
 l=rep(list(0:1),ncols_vars_x)
 grid_vars_x=expand.grid(l)[-1,]
 
 names(grid_vars_x)
 grid_vars_x = grid_vars_x %>%
-  rename(SEXO=Var1,EDAD=Var2,ESC=Var3)
+  rename(SEXO=Var1,EDAD=Var2,ESC=Var3,TIEMPO_TOTAL=Var4,PAREN=Var5)
 rownames(grid_vars_x) <- 1:nrow(grid_vars_x)
 
 ### Generar dataframe para describir los modelos generados
@@ -31,3 +31,6 @@ for (row in 1:nrow(grid_vars_x)) {
   modelos[row,"R2"] = summary(modelo)$r.squared
   modelos[row,"R2_ajustada"] = summary(modelo)$r.squared
 }
+
+modelos %>%
+  arrange(desc(R2_ajustada))
