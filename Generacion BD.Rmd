@@ -374,6 +374,6 @@ lm(SAL_SEM~.-TIEMPO_TOTAL-TIEMPO_CHOF-TIEMPO_FISIO-TIEMPO_ENF_TEC-TIEMPO_COCIN,d
 
 #### Guardar bases
 ```{r}
-##write.csv(enut,"products/csv/enut.csv")
+write.csv(bd,"products/csv/bd.csv")
 ```
 
