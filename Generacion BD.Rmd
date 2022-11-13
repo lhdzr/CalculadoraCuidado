@@ -88,7 +88,7 @@ tmodulo$uid = paste(tmodulo$UPM,tmodulo$VIV_SEL,tmodulo$HOGAR,tmodulo$N_REN,sep=
 ```
 
 #### Modificación de variables
-###### SEXO
+###### SEXO, HABITANTE DEPENDIENTE, HABITANTE TERCERA EDAD, INDÍGENA, PROGRAMA SOCIAL, AFILIACIÓN SERVICIOS MÉDICOS
 Se recodifica de 1 y 2, a 0 y 1.
 ```{r}
 tsdem$SEXO[tsdem$SEXO==1]=0
@@ -99,6 +99,14 @@ tmodulo$FP6_11[tmodulo$FP6_11==3]=0
 
 tmodulo$FP6_15[tmodulo$FP6_15==2]=1
 tmodulo$FP6_15[tmodulo$FP6_15==3]=0
+
+tmodulo$P4_5[tmodulo$P4_5==2]=0
+tmodulo$P4_5[tmodulo$P4_5==9]=0
+
+tmodulo$P6_9_3[tmodulo$P6_9_3==2]=0
+
+tsdem$P3_6[tsdem$P3_6<7]=1
+tsdem$P3_6[tsdem$P3_6>=7]=0
 ```
 
 ## Modificación de entidad
@@ -108,9 +116,10 @@ tmodulo= dummy_cols(tmodulo,select_columns="ENT")
 ```
 
 
-######AMAI
 
-#Transformar variables a dummies y categóricas
+## AMAI
+
+# Transformar variables a dummies y categóricas
 
 ## Pregunta 1: Transformar nivel y grado a escolaridad
 
@@ -261,6 +270,32 @@ enut <- left_join(tmodulo,tsdem,on="uid") %>%
   mutate(ESC=ESC+GRA, SAL_SEM=P5_7/DIVISOR_SALARIO)
 ```
 
+
+### tiempos
+```{r}
+enut$TIEMPO_CUID <- rowSums(enut[,c("P6_15A_1_1","P6_15A_1_3","P6_15A_4_1","P6_15A_4_3","P6_11A_02_1","P6_11A_02_3","P6_11A_03_1","P6_11A_03_3","P6_11A_09_1","P6_11A_09_3","P6_11A_11_1","P6_11A_11_3")],na.rm = TRUE) + rowSums(enut[,c("P6_15A_1_2","P6_15A_1_4","P6_15A_4_2","P6_15A_4_4","P6_11A_02_2","P6_11A_02_4","P6_11A_03_2","P6_11A_03_4","P6_11A_09_2","P6_11A_09_4","P6_11A_11_2","P6_11A_11_4")],na.rm = TRUE)/60
+
+enut$TIEMPO_ENF_TEC <- rowSums(enut[,c("P6_11A_01_1","P6_11A_01_3","P6_11A_05_1","P6_11A_05_3")],na.rm = TRUE) + rowSums(enut[,c("P6_11A_01_2","P6_11A_01_4","P6_11A_05_2","P6_11A_05_4")],na.rm = TRUE)/60
+
+enut$TIEMPO_FISIO <- rowSums(enut[,c("P6_11A_07_1","P6_11A_07_3")],na.rm = TRUE) + rowSums(enut[,c("P6_11A_07_2","P6_11A_07_4")],na.rm = TRUE)/60
+
+enut$TIEMPO_CHOF <- rowSums(enut[,c("P6_15A_2_1","P6_15A_2_3","P6_15A_3_1","P6_15A_3_3","P6_11A_06_1","P6_11A_06_3","P6_11A_08_1","P6_11A_08_3")],na.rm = TRUE) + rowSums(enut[,c("P6_15A_2_2","P6_15A_2_4","P6_15A_3_2","P6_15A_3_4","P6_11A_06_2","P6_11A_06_4","P6_11A_08_2","P6_11A_08_4")],na.rm = TRUE)/60
+
+enut$TIEMPO_COCIN <- rowSums(enut[,c("P6_11A_04_1","P6_11A_04_3")],na.rm = TRUE) + rowSums(enut[,c("P6_11A_04_2","P6_11A_04_4")],na.rm = TRUE)/60
+
+enut$TIEMPO_TOTAL <- rowSums(enut[,c("P6_15A_1_1","P6_15A_1_3","P6_15A_2_1","P6_15A_2_3","P6_15A_3_1","P6_15A_3_3","P6_15A_4_1","P6_15A_4_3","P6_11A_01_1","P6_11A_01_3","P6_11A_02_1","P6_11A_02_3","P6_11A_03_1","P6_11A_03_3","P6_11A_04_1","P6_11A_04_3","P6_11A_05_1","P6_11A_05_3","P6_11A_06_1","P6_11A_06_3","P6_11A_07_1","P6_11A_07_3","P6_11A_08_1","P6_11A_08_3","P6_11A_09_1","P6_11A_09_3","P6_11A_11_1","P6_11A_11_3")], na.rm=TRUE) + rowSums(enut[,c("P6_15A_1_2","P6_15A_1_4","P6_15A_2_2","P6_15A_2_4","P6_15A_3_2","P6_15A_3_4","P6_15A_4_2","P6_15A_4_4","P6_11A_01_2","P6_11A_01_4","P6_11A_02_2","P6_11A_02_4","P6_11A_03_2","P6_11A_03_4","P6_11A_04_2","P6_11A_04_4","P6_11A_05_2","P6_11A_05_4","P6_11A_06_2","P6_11A_06_4","P6_11A_07_2","P6_11A_07_4","P6_11A_08_2","P6_11A_08_4","P6_11A_09_2","P6_11A_09_4","P6_11A_11_2","P6_11A_11_4")], na.rm = TRUE)/60
+
+```
+
+
+## Creación de <code>urbano</code>
+```{r}
+attach(enut)
+enut$urbano = ifelse(is.na(P2_5_10) & is.na(P2_5_11) & is.na(P2_5_12) & is.na(P2_5_13) & is.na(P2_5_14) & is.na(P2_6_1) & is.na(P2_6_2) & is.na(P2_6_1) & is.na(P6_5_5),0,1)
+```
+
+
+
 ##Creación de variables finales AMAI
 #Puntaje final 
 
@@ -320,24 +355,25 @@ ggplot()+
 
 ```
 
+
+### GENERACION BD
+```{r}
+bd = enut %>%
+  select(SEXO,EDAD,ESC,urbano,TIEMPO_TOTAL,P4_5,P6_9_3,P3_6,SAL_SEM,PAREN,TIEMPO_CHOF,TIEMPO_COCIN,TIEMPO_ENF_TEC,TIEMPO_FISIO,TIEMPO_CUID) %>%
+  rename(indigena=P4_5, programa_social=P6_9_3, seguro_medico=P3_6)#%>%
+  #mutate(SEXO=as.factor(SEXO),urbano=as.factor(urbano),indigena=as.factor(indigena),seguro_medico=as.factor(seguro_medico),PAREN=as.factor(PAREN))
+```
+
+
 ###Modelos
-
 ```{r}
-lm.enut = lm(SAL_SEM ~ EDAD+ SEXO+ ESC,data = enut)
-summary(lm.enut)
+lm(SAL_SEM~.-TIEMPO_TOTAL-TIEMPO_CHOF-TIEMPO_FISIO-TIEMPO_ENF_TEC-TIEMPO_COCIN,data=bd)
 ```
-
-```{r}
-lm.imputados = lm(SAL_SEM ~ EDAD+ SEXO+ ESC,data = imputados)
-summary(lm.imputados)
-```
-
-
 
 
 
 #### Guardar bases
 ```{r}
-write.csv(enut,"products/csv/enut.csv")
+##write.csv(enut,"products/csv/enut.csv")
 ```
 

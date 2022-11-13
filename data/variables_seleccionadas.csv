@@ -3,19 +3,14 @@ ENUT,UPM,thogar,Número de UPM,Identificación
 ENUT,VIV_SEL,thogar,Número de vivienda seleccionada,Identificación
 ENUT,HOGAR,thogar,Número de Hogar,Identificación
 ENUT,N_INF,thogar,Número de renglón del informante,Identificación
-ENUT,p2_6_1,thogar,¿En este hogar contratan trabajadoras(es) domésticas(os) de entrada por salida (o de vez en cuando)?,Trabajadores en el hogar
-ENUT,p2_7_1,thogar,¿Cuántas(os) son?,Trabajadores en el hogar
-ENUT,p2_8_1,thogar,En total ¿cuántas horas trabajó(aron) para este hogar la semana pasada?,Trabajadores en el hogar
-ENUT,p2_6_2,thogar,¿En este hogar contratan trabajadoras(es) domésticas(os) que vivan aquí?,Trabajadores en el hogar
-ENUT,p2_7_2,thogar,¿Cuántas(os) son?,Trabajadores en el hogar
 ENUT,p2_8_2,thogar,En total ¿cuántas horas trabajó(aron) para este hogar la semana pasada?,Trabajadores en el hogar
 ENUT,p2_6_3,thogar,"¿En este hogar contratan enfermeras(os) o cuidadoras(es) de niñas, niños o de personas mayores o con alguna discapacidad o enfermedad?",Trabajadores en el hogar
 ENUT,p2_7_3,thogar,¿Cuántas(os) son?,Trabajadores en el hogar
 ENUT,p2_8_3,thogar,En total ¿cuántas horas trabajó(aron) para este hogar la semana pasada?,Trabajadores en el hogar
 ENUT,p3_11,thogar,"La semana pasada, ¿una o más personas de este hogar necesitaron de los cuidados de otra persona por tener discapacidad, enfermedad crónica o temporal?",Cuidados especiales por discapacidad o enfermedad
+ENUT,p4_5,tmodulo,¿Se considera indígena…,
 ENUT,NUM_PER,thogar,Total de personas en el hogar,Identificación
 ENUT,EST_DIS,thogar,ESTRATO DE DISEÑO MUESTRAL,Identificación
-ENUT,UPM_DIS,thogar,CLAVE DE LA UNIDAD PRIMARIA DE MUESTREO,Identificación
 ENUT,FAC_HOG,thogar,FACTOR DE HOGAR,Identificación
 ENUT,UPM,tsdem,Número de UPM,Identificación
 ENUT,VIV_SEL,tsdem,Número de vivienda seleccionada,Identificación
@@ -25,7 +20,6 @@ ENUT,PAREN,tsdem,¿Qué es (NOMBRE) del jefe(a) del hogar?,Parentezco con jefe d
 ENUT,SEXO,tsdem,(NOMBRE) es hombre (NOMBRE) es mujer,Sexo
 ENUT,EDAD,tsdem,¿Cuántos años cumplidos tiene (NOMBRE)?,Edad
 ENUT,p3_6,tsdem,¿(NOMBRE) está afiliado(a) o tiene derecho a los servicios médicos en…,Afiliación a servicios sociales
-ENUT,p3_10,tsdem,¿Cuál es la razón principal por la que (NOMBRE) no asiste o dejó de asistir a la escuela?,Razon de no asistencia a escuela
 ENUT,p3_11b,tsdem,Pregunta P3.11B ¿(NOMBRE)…,Identificación
 ENUT,upm,tmodulo,Número de UPM,Identificación
 ENUT,ent,tmodulo,Entidad,Identificación
@@ -43,9 +37,16 @@ ENUT,p5_6_4,tmodulo,"Aunque no las use, ¿en su trabajo (principal) tiene derech
 ENUT,p5_6_5,tmodulo,"Aunque no las use, ¿en su trabajo (principal) tiene derecho a licencia por cuidados maternos (paternos)?",Prestaciones Sociales en el trabajo
 ENUT,p5_6_6,tmodulo,"Aunque no las use, ¿en su trabajo (principal) tiene derecho a servicio médico (IMSS, ISSSTE, entre otros)?",Prestaciones Sociales en el trabajo
 ENUT,p5_6_7,tmodulo,"Aunque no las use, ¿en su trabajo (principal) tiene derecho a ... Otras prestaciones",Prestaciones Sociales en el trabajo
+ENUT,p6_9_3,tmodulo,"Durante la semana pasada, ¿usted tramitó o cobró algún programa social? (pensión para adultos mayores, tarjeta LICONSA, etc)",Pensión 
 ENUT,p5_7,tmodulo,¿Cuánto gana o recibe usted por trabajar (su actividad)?,Ingresos por trabajo
 ENUT,p5_7a,tmodulo,¿Cada cuándo?,Ingresos por trabajo
-ENUT,p5_8,tmodulo,"Entonces, ¿la semana pasada…",Buscadores de trabajo y PNEA
+ENUT,p2_5_10,thogar,¿En este hogar tienen horno de microondas?,Bienes y servicios del hogar
+ENUT,p2_5_11,thogar,¿En este hogar tienen línea telefónica fija?,Bienes y servicios del hogar
+ENUT,p2_5_12,thogar,¿En este hogar tienen computadora o laptop?,Bienes y servicios del hogar
+ENUT,p2_5_13,thogar,"¿En este hogar tienen televisión de paga (Sky, Dish, Megacable, Izzi, Cablevisión, etcétera)?",Bienes y servicios del hogar
+ENUT,p2_6_1,thogar,¿En este hogar contratan trabajadoras(es) domésticas(os) de entrada por salida (o de vez en cuando)?,Trabajadores en el hogar
+ENUT,p2_6_2,thogar,¿En este hogar contratan trabajadoras(es) domésticas(os) que vivan aquí?,Trabajadores en el hogar
+ENUT,p6_5_5,tmodulo,"Durante la semana pasada, ¿usted limpió, alimentó o cuidó a la(s) mascota(s) (animales de compañía) de su hogar?",Limpieza en la vivienda
 ENUT,fp6_11,tmodulo,VERIFIQUE SI HAY INTEGRANTES QUE NECESITARON CUIDADOS ESPECIALES (PREGUNTA 3.11 = 1),"Cuidados a personas dependientes por discapacidad, enfermedad crónica o temporal"
 ENUT,p6_11_01,tmodulo,"(NOMBRE(S)) necesitó(aron) cuidados de otra persona Durante la semana pasada, sea en la casa, hospital u otro lugar, ¿usted le(s) dio de comer o ayudó a hacerlo?","Cuidados a personas dependientes por discapacidad, enfermedad crónica o temporal"
 ENUT,p6_11a_01_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,"Cuidados a personas dependientes por discapacidad, enfermedad crónica o temporal"
@@ -118,181 +119,6 @@ ENUT,p6_15a_4_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,
 ENUT,p6_15a_4_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,"Cuidado a integrantes del hogar de 60 años y más, no dependientes"
 ENUT,p6_15a_4_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,"Cuidado a integrantes del hogar de 60 años y más, no dependientes"
 ENUT,p6_15a_4_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,"Cuidado a integrantes del hogar de 60 años y más, no dependientes"
-ENUT,p6_16_6,tmodulo,"Durante la semana pasada, ¿usted ayudó de manera gratuita a otro hogar en el cuidado de personas de 60 años y más? (llevarlos, recogerlos o esperarlos para hacer cobros, trámites, etcétera)",Apoyo gratuito a otros hogares
-ENUT,p6_16a_6_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Apoyo gratuito a otros hogares
-ENUT,p6_16a_6_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Apoyo gratuito a otros hogares
-ENUT,p6_16a_6_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Apoyo gratuito a otros hogares
-ENUT,p6_16a_6_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Apoyo gratuito a otros hogares
-ENUT,p6_3_1,tmodulo,"Durante la semana pasada, SÓLO para el consumo de su hogar, ¿usted cuidó o crió animales de corral (ordeñar, recolectar huevos, etcétera)?",Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_1_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_1_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_1_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_1_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3_2,tmodulo,"Durante la semana pasada, SÓLO para el consumo de su hogar, ¿usted recolectó leña?",Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_2_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_2_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_2_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_2_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3_3,tmodulo,"Durante la semana pasada, SÓLO para el consumo de su hogar, ¿usted recolectó plantas, hongos, flores o frutos silvestres; pescó o cazó?",Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_3_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_3_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_3_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_3_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3_4,tmodulo,"Durante la semana pasada, SÓLO para el consumo de su hogar, ¿usted sembró o cuidó lo que plantó en el traspatio o huerto?",Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_4_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_4_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_4_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_4_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3_5,tmodulo,"Durante la semana pasada, SÓLO para el consumo de su hogar, ¿usted acarreó o almacenó agua?",Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_5_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_5_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_5_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_5_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3_6,tmodulo,"Durante la semana pasada, SÓLO para el consumo de su hogar, ¿usted elaboró o tejió ropa, manteles, cortinas o textiles, etcétera?",Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_6_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_6_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes ? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_6_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_6_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3_7,tmodulo,"Durante la semana pasada, SÓLO para el consumo de su hogar, ¿usted elaboró alimentos para conservarse o almacenarse? (mermeladas, conservas, encurtidos, salar carne, chocolate, pan, quesos u otros)",Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_7_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_7_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_7_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_7_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3_8,tmodulo,"Durante la semana pasada, SÓLO para el consumo de su hogar, ¿usted hizo muebles, utensilios de cocina, blocks, adobes u otros productos?",Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_8_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_8_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_8_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_8_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3_9,tmodulo,"Durante la semana pasada, SÓLO para el consumo de su hogar, ¿usted amplió o remodeló usted mismo(a) su vivienda o la estuvo construyendo?",Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_9_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_9_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_9_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_3a_9_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Producción de bienes para consumo exclusivo del hogar 
-ENUT,p6_4_1,tmodulo,"Durante la semana pasada, ¿usted desgranó maíz, coció o molió el nixtamal o hizo tortillas de maíz o trigo para su hogar?",Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_1_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_1_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_1_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_1_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4_2,tmodulo,"Durante la semana pasada, ¿usted encendió el fogón, horno o anafre de leña o carbón para preparar o calentar alimentos?",Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_2_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_2_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_2_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_2_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4_3,tmodulo,"Durante la semana pasada, ¿usted cocinó, preparó o calentó alimentos o bebidas?",Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_3_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_3_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_3_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_3_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4_4,tmodulo,"Durante la semana pasada, ¿usted sirvió la comida, recogió, lavó, secó o acomodó los trastes?",Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_4_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_4_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_4_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_4_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4_5,tmodulo,"Durante la semana pasada, ¿usted llevó comida a algún integrante de su hogar a la escuela, trabajo u otro lugar?",Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_5_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_5_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_5_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_4a_5_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Preparación y servicio de alimentos para el hogar
-ENUT,p6_5_1,tmodulo,"Durante la semana pasada, ¿usted barrió la banqueta, cochera o patio de su vivienda?",Limpieza de la vivienda
-ENUT,p6_5a_1_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza de la vivienda
-ENUT,p6_5a_1_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza de la vivienda
-ENUT,p6_5a_1_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza de la vivienda
-ENUT,p6_5a_1_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza de la vivienda
-ENUT,p6_5_2,tmodulo,"Durante la semana pasada, ¿usted limpió o recogió el interior de su vivienda? (ordenar objetos, tender camas, barrer, trapear, sacudir, lavar la cocina, el baño, entre otros)",Limpieza de la vivienda
-ENUT,p6_5a_2_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza de la vivienda
-ENUT,p6_5a_2_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza de la vivienda
-ENUT,p6_5a_2_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza de la vivienda
-ENUT,p6_5a_2_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza de la vivienda
-ENUT,p6_5_3,tmodulo,"Durante la semana pasada, ¿usted recogió, separó, tiró o quemó la basura?",Limpieza de la vivienda
-ENUT,p6_5a_3_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza de la vivienda
-ENUT,p6_5a_3_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza de la vivienda
-ENUT,p6_5a_3_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza de la vivienda
-ENUT,p6_5a_3_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza de la vivienda
-ENUT,p6_5_4,tmodulo,"Durante la semana pasada, ¿usted cuidó o regó macetas y plantas de su patio o jardín?",Limpieza de la vivienda
-ENUT,p6_5a_4_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza de la vivienda
-ENUT,p6_5a_4_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza de la vivienda
-ENUT,p6_5a_4_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza de la vivienda
-ENUT,p6_5a_4_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza de la vivienda
-ENUT,p6_5_5,tmodulo,"Durante la semana pasada, ¿usted limpió, alimentó o cuidó a la(s) mascota(s) (animales de compañía) de su hogar?",Limpieza de la vivienda
-ENUT,p6_5a_5_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza de la vivienda
-ENUT,p6_5a_5_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza de la vivienda
-ENUT,p6_5a_5_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza de la vivienda
-ENUT,p6_5a_5_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza de la vivienda
-ENUT,p6_6_1,tmodulo,"Durante la semana pasada, ¿usted lavó, tendió o puso a secar la ropa? (si lo hizo con máquina, quite el tiempo de operación)",Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_1_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_1_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_1_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_1_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6_2,tmodulo,"Durante la semana pasada, ¿usted planchó la ropa?",Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_2_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_2_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_2_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_2_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6_3,tmodulo,"Durante la semana pasada, ¿usted separó, dobló, acomodó o guardó la ropa?",Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_3_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_3_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_3_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_3_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6_4,tmodulo,"Durante la semana pasada, ¿usted arregló o remendó la ropa, manteles, cortinas o sábanas (excluya confección)?",Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_4_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_4_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_4_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_4_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6_5,tmodulo,"Durante la semana pasada, ¿usted limpió, boleó o pintó el calzado? (tenis, huaraches, botas, etcétera)",Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_5_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_5_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_5_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_6a_5_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7_1,tmodulo,"Durante la semana pasada, ¿usted reparó o hizo alguna instalación menor a su vivienda?",Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_1_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_1_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_1_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_1_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7_2,tmodulo,"Durante la semana pasada, ¿usted reparó muebles, juguetes, aparatos domésticos o computadora de su hogar?",Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_2_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_2_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_2_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_2_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7_3,tmodulo,"Durante la semana pasada, ¿usted lavó o limpió algún medio de transporte de su hogar? (bicicleta, moto, camioneta, automóvil)",Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_3_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_3_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_3_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_3_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7_4,tmodulo,"Durante la semana pasada, ¿usted reparó o dio mantenimiento a algún medio de transporte de su hogar? (bicicleta, moto, camioneta, automóvil)",Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_4_1,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_4_2,tmodulo,¿Cuánto tiempo le dedicó de lunes a viernes? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_4_3,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - HORAS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_7a_4_4,tmodulo,¿Cuánto tiempo le dedicó sábado y domingo? - MINUTOS,Limpieza y cuidado de ropa y calzado del hogar
-ENUT,p6_8_1,tmodulo,"Durante la semana pasada, ¿usted buscó o compró refacciones, llantas, herramientas o materiales de construcción, automóvil, casa o terreno?",Compras para el hogar
-ENUT,p6_8a_1_1,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó de lunes a viernes? - HORAS",Compras para el hogar
-ENUT,p6_8a_1_2,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó de lunes a viernes? - MINUTOS",Compras para el hogar
-ENUT,p6_8a_1_3,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó sábado y domingo? - HORAS",Compras para el hogar
-ENUT,p6_8a_1_4,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó sábado y domingo? - MINUTOS",Compras para el hogar
-ENUT,p6_8_2,tmodulo,"Durante la semana pasada, ¿usted buscó o hizo las compras del mandado, la despensa, papelería, medicinas o artículos de limpieza?",Compras para el hogar
-ENUT,p6_8a_2_1,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó de lunes a viernes? - HORAS",Compras para el hogar
-ENUT,p6_8a_2_2,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó de lunes a viernes? - MINUTOS",Compras para el hogar
-ENUT,p6_8a_2_3,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó sábado y domingo? - HORAS",Compras para el hogar
-ENUT,p6_8a_2_4,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó sábado y domingo? - MINUTOS",Compras para el hogar
-ENUT,p6_8_3,tmodulo,"Durante la semana pasada, ¿usted buscó o compró artículos o bienes para su hogar como trastes, manteles, muebles, ropa, calzado u otros?",Compras para el hogar
-ENUT,p6_8a_3_1,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó de lunes a viernes? - HORAS",Compras para el hogar
-ENUT,p6_8a_3_2,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó de lunes a viernes? - MINUTOS",Compras para el hogar
-ENUT,p6_8a_3_3,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó sábado y domingo? - HORAS",Compras para el hogar
-ENUT,p6_8a_3_4,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó sábado y domingo? - MINUTOS",Compras para el hogar
-ENUT,p6_9_1,tmodulo,"Durante la semana pasada, ¿usted hizo pagos o trámites de servicios para su hogar? (incluya si lo hizo por internet) (tenencia, predial, agua, luz, credencial de elector, colegiatura, crédito hipotecario, caja de ahorro, renta, actas, CURP, pasaporte, denuncias, etcétera)",Pagos y trámites para el hogar
-ENUT,p6_9a_1_1,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó de lunes a viernes? - HORAS",Pagos y trámites para el hogar
-ENUT,p6_9a_1_2,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó de lunes a viernes? - MINUTOS",Pagos y trámites para el hogar
-ENUT,p6_9a_1_3,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó sábado y domingo? - HORAS",Pagos y trámites para el hogar
-ENUT,p6_9a_1_4,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó sábado y domingo? - MINUTOS",Pagos y trámites para el hogar
-ENUT,p6_9_2,tmodulo,"Durante la semana pasada, ¿usted llevó los gastos (cuentas) de su hogar?",Pagos y trámites para el hogar
-ENUT,p6_9a_2_1,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó de lunes a viernes? - HORAS",Pagos y trámites para el hogar
-ENUT,p6_9a_2_2,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó de lunes a viernes? - MINUTOS",Pagos y trámites para el hogar
-ENUT,p6_9a_2_3,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó sábado y domingo? - HORAS",Pagos y trámites para el hogar
-ENUT,p6_9a_2_4,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó sábado y domingo? - MINUTOS",Pagos y trámites para el hogar
-ENUT,p6_9_3,tmodulo,"Durante la semana pasada, ¿usted tramitó o cobró algún programa social? (pensión para adultos mayores, tarjeta LICONSA, etcétera)",Pagos y trámites para el hogar
-ENUT,p6_9a_3_1,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó de lunes a viernes? - HORAS",Pagos y trámites para el hogar
-ENUT,p6_9a_3_2,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó de lunes a viernes? - MINUTOS",Pagos y trámites para el hogar
-ENUT,p6_9a_3_3,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó sábado y domingo? - HORAS",Pagos y trámites para el hogar
-ENUT,p6_9a_3_4,tmodulo,"Incluyendo el traslado, ¿cuánto tiempo le dedicó sábado y domingo? - MINUTOS",Pagos y trámites para el hogar
 ENOE,p3,coe1,"Si…tiene más de un trabajo, hablemos del principal. ¿Cuáles son las tareas o funciones principales que…desempeña en su trabajo?",Contexto laboral
 ENOE,p3h,coe1,¿En este trabajo ...,Contexto laboral
 ENOE,p5d1,coe1,Horas y minutos o no tiene horario regular de trabajo,Jornada y regularidad laboral
@@ -314,8 +140,8 @@ ENOE,per,coe1,Periodo,Identificador
 ENOE,n_ren,coe1,Número de renglón,Identificador
 ENOE,eda,coe1,Edad,Identificador
 ENOE,n_inf,coe1,Renglón del Informante,Identificador
-ENUT,gra,tmodulo,¿Hasta qué año o grado aprobó usted en la escuela? - NIVEL,Caracteristicas sociodemográficas
 ENUT,niv,tmodulo,¿Hasta qué año o grado aprobó usted en la escuela? - NIVEL,Caracteristicas sociodemográficas
+ENUT,gra,tmodulo,¿Hasta qué año o grado aprobó usted en la escuela? - GRADO,Caracteristicas sociodemográficas
 ENUT,p1_7,tvivienda,"¿Esta vivienda tiene excusado, retrete, sanitario, letrina u hoyo negro?",Vivienda
 ENUT,p2_5_09,thogar,¿En este hogar tienen automóvil o camioneta propios?,Hogar
 ENUT,p2_5_14,thogar,¿En este hogar tienen internet?,Hogar
