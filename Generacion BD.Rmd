@@ -37,15 +37,6 @@ tsdem = read.csv("data/conjunto_de_datos_enut_2019_csv/conjunto_de_datos_enut_20
                    encoding = "utf-8")
 ```
 
-#### Renombrar columnas con nombre importado incorrectamente
-Esta sección puede comentarse si no hubo problema de importación
-
-```{r}
-tvivienda = tvivienda %>% rename(UPM=ï..UPM)
-thogar = thogar %>% rename(UPM=ï..UPM)
-tsdem = tsdem %>% rename(UPM=ï..UPM)
-```
-
 #### Lectura de variables seleccionadas
 
 ```{r}
@@ -359,21 +350,22 @@ ggplot()+
 ### GENERACION BD
 ```{r}
 bd = enut %>%
-  select(SEXO,EDAD,ESC,urbano,TIEMPO_TOTAL,P4_5,P6_9_3,P3_6,SAL_SEM,PAREN,TIEMPO_CHOF,TIEMPO_COCIN,TIEMPO_ENF_TEC,TIEMPO_FISIO,TIEMPO_CUID) %>%
-  rename(indigena=P4_5, programa_social=P6_9_3, seguro_medico=P3_6)#%>%
+  select(SEXO,EDAD,ENT,ESC,urbano,TIEMPO_TOTAL,P4_4,P4_5,P5_5,P6_9_3,P3_6,PAREN,TIEMPO_CHOF,TIEMPO_COCIN,TIEMPO_ENF_TEC,TIEMPO_FISIO,TIEMPO_CUID,NUM_PER,SAL_SEM) %>%
+  rename(SIT_CONYUGAL=P4_4,INDIGENA=P4_5,TIPO_TRABAJO=P5_5, PROGRAMA_SOCIAL=P6_9_3, SEGURO_MEDICO=P3_6)#%>%
   #mutate(SEXO=as.factor(SEXO),urbano=as.factor(urbano),indigena=as.factor(indigena),seguro_medico=as.factor(seguro_medico),PAREN=as.factor(PAREN))
+bd <- bd[which(bd$SAL_SEM>0),]
 ```
 
 
 ###Modelos
 ```{r}
-lm(SAL_SEM~.-TIEMPO_TOTAL-TIEMPO_CHOF-TIEMPO_FISIO-TIEMPO_ENF_TEC-TIEMPO_COCIN,data=bd)
+summary(lm(SAL_SEM~.-TIEMPO_TOTAL-TIEMPO_CHOF-TIEMPO_FISIO-TIEMPO_ENF_TEC-TIEMPO_COCIN,data=bd))
 ```
 
 
 
 #### Guardar bases
 ```{r}
-write.csv(bd,"products/csv/bd.csv")
+write.csv(bd,"products/csv/bd.csv",row.names = FALSE)
 ```
 

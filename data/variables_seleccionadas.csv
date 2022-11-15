@@ -163,3 +163,4 @@ ENOE,eda,coe2,Edad,Identificador
 ENOE,n_inf,coe2,Renglón del Informante,Identificador
 ENUT,upm,tvivienda,Número de UPM,Identificador
 ENUT,viv_sel,tvivienda,Número de vivienda seleccionada,Identificador
+ENUT,P4_4,tmodulo,Situacion conyugal,Situacion conyugal
