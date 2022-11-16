@@ -176,9 +176,16 @@ Como la AMAI pregunta escolaridad del jefe de hogar, se realizó un filtro por j
 
 
 ```{r}
+tab_esc <- data.frame(NIV=c(0:9),ESC=c(0,0,0,6,9,9,9,12,12,16))
+
+tmodulo <- tmodulo %>%
+  full_join(tab_esc,on="NIV") 
+  mutate(ESC=ESC+GRA)
+
 jefes= filter(tsdem, PAREN==1) %>%
   left_join(tmodulo, on="uid") %>%
-  select(c("nivelescolar", "hid"))
+  select(c("ESC", "hid")) %>%
+  rename(esc_jefe=ESC)
 
 thogar=left_join(thogar, jefes, on="hid")
 ```
@@ -250,7 +257,6 @@ dividirá el salario de la persona para estandarizar salarios a salario por sema
 
 #### Unión de tablas
 ```{r}
-tab_esc <- data.frame(NIV=c(0:9),ESC=c(0,0,0,6,9,9,9,12,12,16))
 tab_sal <- data.frame(P5_7A=c(1,2,3,4), DIVISOR_SALARIO = c(1,2,4,52))
 
 enut <- left_join(tmodulo,tsdem,on="uid") %>%

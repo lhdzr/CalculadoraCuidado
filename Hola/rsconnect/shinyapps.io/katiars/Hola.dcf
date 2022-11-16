@@ -1,0 +1,13 @@
+name: Hola
+title: Hola
+username:
+account: katiars
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7627619
+bundleId: 6514308
+url: https://katiars.shinyapps.io/Hola/
+when: 1668472515.1861
+lastSyncTime: 1668472515.18614
+asMultiple: FALSE
+asStatic: FALSE
