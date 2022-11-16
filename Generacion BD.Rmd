@@ -179,7 +179,7 @@ Como la AMAI pregunta escolaridad del jefe de hogar, se realizó un filtro por j
 tab_esc <- data.frame(NIV=c(0:9),ESC=c(0,0,0,6,9,9,9,12,12,16))
 
 tmodulo <- tmodulo %>%
-  full_join(tab_esc,on="NIV") 
+  full_join(tab_esc,on="NIV") %>%
   mutate(ESC=ESC+GRA)
 
 jefes= filter(tsdem, PAREN==1) %>%
