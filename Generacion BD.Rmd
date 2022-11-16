@@ -350,7 +350,7 @@ ggplot()+
 ### GENERACION BD
 ```{r}
 bd = enut %>%
-  select(SEXO,EDAD,ENT,ESC,urbano,TIEMPO_TOTAL,P4_4,P4_5,P5_5,P6_9_3,P3_6,PAREN,TIEMPO_CHOF,TIEMPO_COCIN,TIEMPO_ENF_TEC,TIEMPO_FISIO,TIEMPO_CUID,NUM_PER,SAL_SEM) %>%
+  select(SEXO,EDAD,ENT,ESC,URBANO,TIEMPO_TOTAL,P4_4,P4_5,P5_5,P6_9_3,P3_6,PAREN,TIEMPO_CHOF,TIEMPO_COCIN,TIEMPO_ENF_TEC,TIEMPO_FISIO,TIEMPO_CUID,NUM_PER,SAL_SEM) %>%
   rename(SIT_CONYUGAL=P4_4,INDIGENA=P4_5,TIPO_TRABAJO=P5_5, PROGRAMA_SOCIAL=P6_9_3, SEGURO_MEDICO=P3_6)#%>%
   #mutate(SEXO=as.factor(SEXO),urbano=as.factor(urbano),indigena=as.factor(indigena),seguro_medico=as.factor(seguro_medico),PAREN=as.factor(PAREN))
 bd <- bd[which(bd$SAL_SEM>0),]
