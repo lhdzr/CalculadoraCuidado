@@ -13,36 +13,53 @@ library(shiny)
 shinyUI(fluidPage(
 
     # Application title
-    titlePanel("Mi primer Shiny"),
-
-    # Sidebar with a slider input for number of bins
-    sidebarLayout(
-        sidebarPanel(
-            numericInput(inputId="Infectivity",
-                        label="Infectividad:",
-                        min = 0,
-                        max = 1,
-                        step = 0.01,
-                        value = 0.1),
-            sliderInput("Contact.Frequency",
-                        "Frecuencia de contacto:",
-                        min=0,
-                        max=10,
-                        value= 2, 
-                        step= 1, 
-                        animate=FALSE),
-            radioButtons("finaltime",
-                         "Tiempo final",
-                         choices= c("Tiempo 1" = "60",
-                                    "Tiempo 2" = "120",
-                                    "Tiempo 3" = "200"),
-                         selected = "120")
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-            plotOutput("distPlot")
-        )
-    )
+    titlePanel("Calculadora de salario"),
+    
+    tabsetPanel(
+      tabPanel("enut",
+               titlePanel("Características personales"),
+               flowLayout(selectInput("Estado",
+                                      "Estado de residencia",
+                                      c("Aguascalientes","Baja California")),
+                          radioButtons("Sexo",
+                                       "Sexo",
+                                       c("Hombre","Mujer")),
+                          sliderInput("Escolaridad",
+                                      "Años de escolaridad",
+                                      0,
+                                      30,
+                                      9),
+                          numericInput(inputId="Edad",
+                                       label="Edad",
+                                       20,
+                                       12,
+                                       98),
+                          selectInput("EstadoCivil",
+                                      "Estado Civil",
+                                      c("Pareja en unión libre",
+                                        "Separado",
+                                        "Divorciado",
+                                        "Viudo",
+                                        "Casado",
+                                        "Soltero")),
+                          radioButtons("Urbano",
+                                       "¿Vives en un entorno rural, o urbano?",
+                                       c("Rural","Urbano")),
+                          radioButtons("Indigena",
+                                       "¿Se considera indígena?",
+                                       c("Sí","No"))),
+               titlePanel("Acceso a seguridad social"),
+               flowLayout(
+                 radioButtons("Afiliacion",
+                              "¿Está afiliado a algún servicio médico?",
+                              c("Sí","No")
+               )),
+               titlePanel("Características del hogar"),
+               flowLayout(
+                 radioButtons("SexoJefe",
+                              "El/la jefe de tu hogar es:",
+                              c("Hombre", "Mujer"))
+               )),
+      tabPanel("enoe")
+      ),
 ))
-
