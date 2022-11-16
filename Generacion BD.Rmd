@@ -262,7 +262,7 @@ tab_sal <- data.frame(P5_7A=c(1,2,3,4), DIVISOR_SALARIO = c(1,2,4,52))
 enut <- left_join(tmodulo,tsdem,on="uid") %>%
   left_join(thogar,on="hid") %>%
   left_join(tvivienda,on="vid") %>%
-  full_join(tab_esc,on="NIV") %>%
+  left_join(tab_esc,on="NIV") %>%
   full_join(tab_sal,on="P5_7A") %>%
   mutate(ESC=ESC+GRA, SAL_SEM=P5_7/DIVISOR_SALARIO)
 ```
