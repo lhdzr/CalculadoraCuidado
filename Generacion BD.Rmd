@@ -184,8 +184,8 @@ tmodulo <- tmodulo %>%
 
 jefes= filter(tsdem, PAREN==1) %>%
   left_join(tmodulo, on="uid") %>%
-  select(c("ESC", "hid")) %>%
-  rename(esc_jefe=ESC)
+  select(c("hid", "ESC", "SEXO","EDAD","nivelescolar")) %>%
+  rename(esc_jefe=ESC,jefatura_femenina=SEXO,edad_jefe=EDAD,nivelescolar_jefe=nivelescolar)
 
 thogar=left_join(thogar, jefes, on="hid")
 ```
@@ -335,28 +335,12 @@ enut$salarioprom_AMAI<- ifelse(clasif_AMAI=="E", 6200,
 tapply(enut$SAL_SEM, enut$clasif_AMAI, summary)
 ```
 
-### Imputación de datos 
-
-```{r}
-imputados<-missRanger(enut, SAL_SEM ~ .,num.trees = 1000, seed =1)
-
-```
-
-```{r}
-ggplot()+
-  geom_point(data = imputados, aes(ESC,SAL_SEM),
-             color="red")+
-  geom_point(data = enut, aes(ESC,SAL_SEM))+
-  theme_minimal()
-
-
-```
 
 
 ### GENERACION BD
 ```{r}
 bd = enut %>%
-  select(SEXO,EDAD,ENT,ESC,URBANO,TIEMPO_TOTAL,P4_4,P4_5,P5_5,P6_9_3,P3_6,PAREN,TIEMPO_CHOF,TIEMPO_COCIN,TIEMPO_ENF_TEC,TIEMPO_FISIO,TIEMPO_CUID,NUM_PER,SAL_SEM) %>%
+  select(SEXO,EDAD,ENT,ESC,urbano,TIEMPO_TOTAL,P4_4,P4_5,P5_5,P6_9_3,P3_6,PAREN,TIEMPO_CHOF,TIEMPO_COCIN,TIEMPO_ENF_TEC,TIEMPO_FISIO,TIEMPO_CUID,NUM_PER,esc_jefe,jefatura_femenina,edad_jefe,SAL_SEM) %>%
   rename(SIT_CONYUGAL=P4_4,INDIGENA=P4_5,TIPO_TRABAJO=P5_5, PROGRAMA_SOCIAL=P6_9_3, SEGURO_MEDICO=P3_6)#%>%
   #mutate(SEXO=as.factor(SEXO),urbano=as.factor(urbano),indigena=as.factor(indigena),seguro_medico=as.factor(seguro_medico),PAREN=as.factor(PAREN))
 bd <- bd[which(bd$SAL_SEM>0),]
@@ -373,5 +357,9 @@ summary(lm(SAL_SEM~.-TIEMPO_TOTAL-TIEMPO_CHOF-TIEMPO_FISIO-TIEMPO_ENF_TEC-TIEMPO
 #### Guardar bases
 ```{r}
 write.csv(bd,"products/csv/bd.csv",row.names = FALSE)
+```
+
+```{r}
+
 ```
 
