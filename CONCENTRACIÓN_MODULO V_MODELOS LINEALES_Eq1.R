@@ -66,11 +66,10 @@ library(olsrr)
 # datos <- meatspec
 # head(datos,3)
 
-setwd("C:/Users/hecto/Documents/Finanzas clase/ChileTextMining")
 bd <- read.csv("products/csv/bd.csv")
 
 ## se elimina la priemra columa con el index
-bd <- bd[,-c(1)]
+
 
 ## se quita la columna de ent, pues se correra un modelo para cada una
 # ent_v <- bd$ent
@@ -78,11 +77,17 @@ bd <- bd[,-c(1)]
 # bd <- bd[,-c(grep("ent", colnames(bd)))]
 
 ## se le da formato a las variables categorias
-bd$SEXO<- as.factor(bd$SEXO)
-bd$indigena <- as.factor(bd$indigena)
-bd$urbano <- as.factor(bd$urbano)
-bd$programa_social <- as.factor(bd$programa_social)
-bd$seguro_medico <- as.factor(bd$seguro_medico)
+bd = bd %>% 
+  mutate(SEXO=as.factor(SEXO),
+         ENT=as.factor(ENT),
+         urbano=as.factor(urbano),
+         SIT_CONYUGAL=as.factor(SIT_CONYUGAL),
+         INDIGENA=as.factor(INDIGENA),
+         TIPO_TRABAJO=as.factor(TIPO_TRABAJO),
+         PROGRAMA_SOCIAL=as.factor(PROGRAMA_SOCIAL),
+         SEGURO_MEDICO=as.factor(SEGURO_MEDICO),
+         PAREN=as.factor(PAREN),
+         jefatura_femenina=as.factor(jefatura_femenina))
 
 ### se consideran los valores mayores a 0
 bd <- bd[which(bd$SAL_SEM>0),]
@@ -143,7 +148,7 @@ hist(datos$SAL_SEM, breaks = 100)
 # Creación y entrenamiento del modelo
 # ==============================================================================
 
-par_var_x <- colnames(datos)[-c(1, grep("ent", colnames(datos)))]
+par_var_x <- colnames(datos)[-c(22, grep("ENT", colnames(datos)))]
 ### GRID DE COMBINACIONES DE VARIABLES REGRESORAS
 ncols_vars_x <- length(par_var_x)
 l <- rep(list(0:1), ncols_vars_x)
@@ -160,12 +165,12 @@ grid_vars_x <- grid_vars_x[id_pares,]
 
 par_y_log=T
 if(par_y_log){
-y_formula <- paste("log(",colnames(datos)[1], ")", sep="")
+y_formula <- paste("log(",colnames(datos)[22], ")", sep="")
 }else{
-y_formula <- paste(colnames(datos)[1])
+y_formula <- paste(colnames(datos)[22])
 }
 
-x_formula <- paste(colnames(datos)[-c(1, grep("ent", colnames(datos)))], collapse="+")
+x_formula <- paste(colnames(datos)[-c(22, grep("ENT", colnames(datos)))], collapse="+")
 
 ###
 ### LOOP ENTIDADES
@@ -174,7 +179,7 @@ x_formula <- paste(colnames(datos)[-c(1, grep("ent", colnames(datos)))], collaps
 mse_res <- list()
 x_formula_combinacion_i_ls <- list()
 # unique_entidades <- sort(as.numeric(unique(datos$ent)))
-j=2
+j=1
 for(j in 1:32){
   
   print(c(j, 32))
@@ -185,15 +190,15 @@ for(j in 1:32){
   id_train <- sample(1:nrow(datos), size = 0.7*nrow(datos), replace = FALSE)
   
   datos_train_0 <- datos[id_train, ]
-  id_ent_j_train <- which(datos_train_0$ent==j)
+  id_ent_j_train <- which(datos_train_0$ENT==j)
   dim(datos_train_0)
   datos_test_0  <- datos[-id_train, ]
-  id_ent_j_test <- which(datos_test_0$ent==j)
+  id_ent_j_test <- which(datos_test_0$ENT==j)
   dim(datos_test_0)
 
-  datos_train <- datos_train_0[id_ent_j_train,-grep("ent", colnames(datos))]
+  datos_train <- datos_train_0[id_ent_j_train,-grep("ENT", colnames(datos))]
   dim(datos_train)
-  datos_test <- datos_test_0[id_ent_j_test,-grep("ent", colnames(datos))]
+  datos_test <- datos_test_0[id_ent_j_test,-grep("ENT", colnames(datos))]
   dim(datos_test)
   # dim(datos_test)
   
@@ -250,7 +255,7 @@ for(j in 1:32){
     }
     
     summary_i <- summary(modelo)
-    print(paste("ent",j, "ols ","R2adj=", summary_i$adj.r.squared, sep=" "))
+    print(paste("ENT",j, "ols ","R2adj=", summary_i$adj.r.squared, sep=" "))
     
     # Coeficientes del modelo
     # ==============================================================================
@@ -283,7 +288,7 @@ for(j in 1:32){
     
     # MSE de entrenamiento
     # ==============================================================================
-    training_mse <- mean((predicciones_train - datos_train$ing_x_hrs)^2)
+    training_mse <- mean((predicciones_train - datos_train$SAL_SEM)^2)
     paste("Error (mse) de entrenamiento:", training_mse)
     
     # Predicciones de test
@@ -294,7 +299,7 @@ for(j in 1:32){
     
     # MSE de test
     # ==============================================================================
-    test_mse_ols <- mean((predicciones_test - datos_test$ing_x_hrs)^2)
+    test_mse_ols <- mean((predicciones_test - datos_test$SAL_SEM)^2)
     paste("Error (mse) de test:", test_mse_ols)
     
     
@@ -464,7 +469,7 @@ for(j in 1:32){
     # ?step
     
     summary_i <- summary(modelo)
-    print(paste("ent",j, "stepwise ","R2adj=", summary_i$adj.r.squared, sep=" "))
+    print(paste("ENT",j, "stepwise ","R2adj=", summary_i$adj.r.squared, sep=" "))
     
     # Coeficientes del modelo
     # ==============================================================================
@@ -487,7 +492,7 @@ for(j in 1:32){
     
     # MSE de entrenamiento
     # ==============================================================================
-    training_mse <- mean((predicciones_train - datos_train$ing_x_hrs)^2)
+    training_mse <- mean((predicciones_train - datos_train$SAL_SEM)^2)
     paste("Error (mse) de entrenamiento:", training_mse)
     
     # Predicciones de test
@@ -499,7 +504,7 @@ for(j in 1:32){
     
     # MSE de test
     # ==============================================================================
-    test_mse_step <- mean((predicciones_test - datos_test$ing_x_hrs)^2)
+    test_mse_step <- mean((predicciones_test - datos_test$SAL_SEM)^2)
     paste("Error (mse) de test:", test_mse_step)
     
     ## -> INTERPRETACIÓN: El proceso de stepwise selection devuelve como mejor modelo 
@@ -661,16 +666,16 @@ for(j in 1:32){
     # Variables y
     # ==============================================================================
     if(par_y_log){
-      y_train <- (datos_train$ing_x_hrs)
-      y_test <- (datos_test$ing_x_hrs)
+      y_train <- (datos_train$SAL_SEM)
+      y_test <- (datos_test$SAL_SEM)
 
     }
     
     # Matrices de entrenamiento y test
     # ==============================================================================
-    x_train <- model.matrix((ing_x_hrs)~., data = datos_train)[, -1]
+    x_train <- model.matrix((SAL_SEM)~., data = datos_train)[, -1]
 
-    x_test <- model.matrix((ing_x_hrs)~., data = datos_test)[, -1]
+    x_test <- model.matrix((SAL_SEM)~., data = datos_test)[, -1]
     
     # Creación y entrenamiento del modelo
     # ==============================================================================
@@ -830,10 +835,10 @@ for(j in 1:32){
     # Matrices de entrenamiento y test
     # ==============================================================================
     x_train <- model.matrix(formula_i, data = datos_train)[, -1]
-    y_train <- datos_train$ing_x_hrs
+    y_train <- datos_train$SAL_SEM
     
     x_test <- model.matrix(formula_i, data = datos_test)[, -1]
-    y_test <- datos_test$ing_x_hrs
+    y_test <- datos_test$SAL_SEM
     
     # Creación y entrenamiento del modelo
     # ==============================================================================
@@ -995,7 +1000,7 @@ for(j in 1:32){
     datos_train_gower <- data.frame(cbind(datos_train[,1], datos_train_gower_x))
     colnames(datos_train_gower)[1] <- colnames(datos_train)[1]
     # colnames(datos_train_gower)[1]
-    modelo_pcr <- pcr( ing_x_hrs ~., data = datos_train_gower, scale = TRUE, validation = "CV")
+    modelo_pcr <- pcr( SAL_SEM ~., data = datos_train_gower, scale = TRUE, validation = "CV")
     
     # El summary del modelo pcr devuelve la estimación del RMSEP (raíz cuadrada del MSE) 
     # para cada posible número de componentes introducidas en el modelo. También se muestra 
@@ -1026,7 +1031,7 @@ for(j in 1:32){
     # Una vez identificado el número óptimo de componentes, se reentrena el modelo 
     # indicando este valor.
     
-    modelo <- pcr(ing_x_hrs ~ ., data = datos_train, scale = TRUE, ncomp = 10) ## se corrigio para poder elegir menos componentes
+    modelo <- pcr(SAL_SEM ~ ., data = datos_train, scale = TRUE, ncomp = 10) ## se corrigio para poder elegir menos componentes
     
     summary_i <- summary(modelo)
     
@@ -1036,7 +1041,7 @@ for(j in 1:32){
     
     # MSE de entrenamiento
     # ==============================================================================
-    training_mse <- mean((predicciones_train - as.numeric(datos_train$ing_x_hrs))^2)
+    training_mse <- mean((predicciones_train - as.numeric(datos_train$SAL_SEM))^2)
     paste("Error (mse) de entrenamiento:", training_mse)
     
     # Predicciones de test
@@ -1045,7 +1050,7 @@ for(j in 1:32){
     
     # MSE de test
     # ==============================================================================
-    test_mse_pcr <- mean((predicciones_test - as.numeric(datos_test$ing_x_hrs))^2)
+    test_mse_pcr <- mean((predicciones_test - as.numeric(datos_test$SAL_SEM))^2)
     paste("Error (mse) de test:", test_mse_pcr)
     
     
@@ -1109,7 +1114,7 @@ for(j in 1:32){
     # Una vez identificado el número óptimo de componentes, se entrena de nuevo el 
     # modelo con el valor encontrado.
     
-    modelo <- plsr(ing_x_hrs ~ ., data = datos_train, scale = TRUE, ncomp = 10)
+    modelo <- plsr(SAL_SEM ~ ., data = datos_train, scale = TRUE, ncomp = 10)
     # R2(modelo)
     summary_i <- summary(modelo)
     
@@ -1120,7 +1125,7 @@ for(j in 1:32){
     
     # MSE de entrenamiento
     # ==============================================================================
-    training_mse <- mean((predicciones_train - as.numeric(datos_train$ing_x_hrs))^2)
+    training_mse <- mean((predicciones_train - as.numeric(datos_train$SAL_SEM))^2)
     paste("Error (mse) de entrenamiento:", training_mse)
     
     
@@ -1130,7 +1135,7 @@ for(j in 1:32){
     
     # MSE de test
     # ==============================================================================
-    test_mse_plsr <- mean((predicciones_test - as.numeric(datos_test$ing_x_hrs))^2)
+    test_mse_plsr <- mean((predicciones_test - as.numeric(datos_test$SAL_SEM))^2)
     paste("Error (mse) de test:", test_mse_plsr)
     
     

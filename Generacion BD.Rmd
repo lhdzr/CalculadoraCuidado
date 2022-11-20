@@ -358,8 +358,3 @@ summary(lm(SAL_SEM~.-TIEMPO_TOTAL-TIEMPO_CHOF-TIEMPO_FISIO-TIEMPO_ENF_TEC-TIEMPO
 ```{r}
 write.csv(bd,"products/csv/bd.csv",row.names = FALSE)
 ```
-
-```{r}
-
-```
-
