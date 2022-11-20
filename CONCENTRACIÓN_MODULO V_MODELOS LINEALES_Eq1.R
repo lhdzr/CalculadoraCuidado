@@ -41,7 +41,12 @@ library(olsrr)
 # df <- data.frame(nom, vars)
 # 
 # # install.packages("cluster")
-# library(cluster)
+library(cluster)
+
+
+library(h2o)
+# Start the H2O cluster (locally)
+h2o.init()
 # daisy.mat <- as.matrix(daisy(df, metric="gower"))
 # dim(daisy.mat)
 # 
@@ -147,8 +152,10 @@ hist(datos$SAL_SEM, breaks = 100)
 
 # Creación y entrenamiento del modelo
 # ==============================================================================
+datos <- datos[,c(22,1:21)]
 
-par_var_x <- colnames(datos)[-c(22, grep("ENT", colnames(datos)))]
+
+par_var_x <- colnames(datos)[-c(1, grep("ENT", colnames(datos)))]
 ### GRID DE COMBINACIONES DE VARIABLES REGRESORAS
 ncols_vars_x <- length(par_var_x)
 l <- rep(list(0:1), ncols_vars_x)
@@ -159,18 +166,19 @@ id_pares <- which(apply(grid_vars_x, 1, FUN=sum)<=2)
 grid_vars_x <- grid_vars_x[id_pares,]
 
 
+
 ###
 ### TRANSFORMACION DE LA VARIABLE Y A LOG(Y)
 ###
 
 par_y_log=T
 if(par_y_log){
-y_formula <- paste("log(",colnames(datos)[22], ")", sep="")
+y_formula <- paste("log(",colnames(datos)[1], ")", sep="")
 }else{
-y_formula <- paste(colnames(datos)[22])
+y_formula <- paste(colnames(datos)[1])
 }
 
-x_formula <- paste(colnames(datos)[-c(22, grep("ENT", colnames(datos)))], collapse="+")
+x_formula <- paste(colnames(datos)[-c(1, grep("ENT", colnames(datos)))], collapse="+")
 
 ###
 ### LOOP ENTIDADES
@@ -225,12 +233,13 @@ for(j in 1:32){
     
   }
   
+  
   x_formula_i <- paste(x_formula, x_formula_combinacion_i, sep="+")
   # formula_i <-as.formula(paste(y_formula,x_formula_i, sep="~"))
   
   x_formula_combinaciones <- paste(x_formula, paste(unlist(x_formula_combinacion_i_ls), collapse="+"), sep="+")
   formula_i <-as.formula(paste(y_formula,x_formula_combinaciones, sep="~"))
-  
+  formula_i <-as.formula(paste(y_formula,x_formula, sep="~"))
  
   ###
   ### 1) METODO: Mínimos cuadrados (OLS)
@@ -475,6 +484,7 @@ for(j in 1:32){
     # ==============================================================================
     df_coeficientes <- modelo$coefficients %>%
       enframe(name = "predictor", value = "coeficiente")
+    variables_elegidas_step <<- colnames(modelo$model)[-1]
     
     df_coeficientes %>%
       filter(predictor != "(Intercept)") %>%
@@ -641,6 +651,8 @@ for(j in 1:32){
   }
   modelo_step_residuals <- fn_resids(modelo_step_results$modelo)
   
+
+  
   ###
   ### 3) METODO: Ridge
   ###
@@ -801,6 +813,7 @@ for(j in 1:32){
     # Predicciones de test
     # ==============================================================================
     predicciones_test <- predict(modelo, newx = x_test)
+    predict(modelo, data.frame(SEXO=c(0,1)),interval="prediction")
     
     # MSE de test
     # ==============================================================================
@@ -992,15 +1005,31 @@ for(j in 1:32){
     # Creación y entrenamiento del modelo
     # ==============================================================================
     set.seed(123)
+    head(datos_train)
     # Importante estandarizar las variables indicándolo con el argumento scale 
     # Indicando validation = CV, se emplea 10-fold-cross-validation para
     # identificar el número óptimo de componentes.
     
-    datos_train_gower_x <- as.matrix(daisy(datos_train[,-1], metric="gower"))
-    datos_train_gower <- data.frame(cbind(datos_train[,1], datos_train_gower_x))
+    #datos_train_gower_x <- as.matrix(daisy(datos_train[,-1], metric="gower"))
+    
+    datos_train_gower_x <- as.matrix(daisy(datos_train[1:nrow(datos_test),variables_elegidas_step], metric="gower"))
+    datos_train_gower_y <- datos_train[1:nrow(datos_test),1]
+    datos_train_gower <- data.frame(datos_train_gower_y,datos_train_gower_x)
     colnames(datos_train_gower)[1] <- colnames(datos_train)[1]
+    
+    datos_test_gower_x <- as.matrix(daisy(datos_test[1:nrow(datos_test),variables_elegidas_step], metric="gower"))
+    datos_test_gower_y <- datos_test[1:nrow(datos_test),1]
+    datos_test_gower <- data.frame(datos_test_gower_y,datos_test_gower_x)
+    colnames(datos_test_gower)[1] <- colnames(datos_test)[1]
+    
+    
     # colnames(datos_train_gower)[1]
-    modelo_pcr <- pcr( SAL_SEM ~., data = datos_train_gower, scale = TRUE, validation = "CV")
+    id_sample <- sample(1:nrow(datos_train_gower),300,F)
+    datos_train_reduc <- datos_train_gower[id_sample,]
+    datos_test_reduc <- datos_test_gower[id_sample,]
+    colnames(datos_test_reduc) <- colnames(datos_train_reduc)
+    modelo_pcr <- pcr( SAL_SEM ~., data = datos_train_reduc, scale = TRUE, validation = "CV")
+    
     
     # El summary del modelo pcr devuelve la estimación del RMSEP (raíz cuadrada del MSE) 
     # para cada posible número de componentes introducidas en el modelo. También se muestra 
@@ -1030,14 +1059,14 @@ for(j in 1:32){
     
     # Una vez identificado el número óptimo de componentes, se reentrena el modelo 
     # indicando este valor.
-    
-    modelo <- pcr(SAL_SEM ~ ., data = datos_train, scale = TRUE, ncomp = 10) ## se corrigio para poder elegir menos componentes
+    #######  NUMERO DE COMPONENTES MANUAL
+    modelo <- pcr(SAL_SEM ~ ., data = datos_train_reduc, scale = TRUE, ncomp = n_componentes_optimo) ## se corrigio para poder elegir menos componentes
     
     summary_i <- summary(modelo)
     
     # Predicciones de entrenamiento
     # ==============================================================================
-    predicciones_train <- predict(modelo, newdata = datos_train)
+    predicciones_train <- predict(modelo, newdata = datos_train_reduc)
     
     # MSE de entrenamiento
     # ==============================================================================
@@ -1046,7 +1075,7 @@ for(j in 1:32){
     
     # Predicciones de test
     # ==============================================================================
-    predicciones_test <- predict(modelo, newdata  = datos_test)
+    predicciones_test <- predict(modelo, newdata  = datos_test_reduc)
     
     # MSE de test
     # ==============================================================================
@@ -1114,7 +1143,7 @@ for(j in 1:32){
     # Una vez identificado el número óptimo de componentes, se entrena de nuevo el 
     # modelo con el valor encontrado.
     
-    modelo <- plsr(SAL_SEM ~ ., data = datos_train, scale = TRUE, ncomp = 10)
+    modelo <- plsr(SAL_SEM ~ ., data = datos_train, scale = TRUE, ncomp = n_componentes_optimo)
     # R2(modelo)
     summary_i <- summary(modelo)
     
@@ -1151,6 +1180,91 @@ for(j in 1:32){
   modelo_pls_results <- modelo_pls(formula_i, datos_train, datos_test)
   
   ###
+  ###  H2O 
+  ###
+  
+  par_y_type <- "numeric"
+  fn_h2o <- function(datos, par_y_type="numeric"){
+    
+    results_ls <- list()
+
+    # datos
+    # summary(datos$ing_x_hrs)
+    
+    # # Import a sample binary outcome train/test set into H2O
+    # train <- h2o.importFile("https://s3.amazonaws.com/erin-data/higgs/higgs_train_10k.csv")
+    # test <- h2o.importFile("https://s3.amazonaws.com/erin-data/higgs/higgs_test_5k.csv")
+    
+    train <- as.h2o(datos_train)
+    test <- as.h2o(datos_test)
+    
+    # train <- datos_train
+    # test <- datos_test
+    
+    # Identify predictors and response
+    y <- colnames(datos_train)[1]
+    x <- setdiff(names(train), y)
+    
+    
+    # For binary classification, response should be a factor
+    if(par_y_type=="factor"){
+      train[, y] <- as.factor(train[, y])
+      test[, y] <- as.factor(test[, y])
+    }
+    
+    # Run AutoML for 20 base models
+    aml <- h2o.automl(x = x, y = y,
+                      training_frame = train,
+                      max_models = 20,
+                      seed = 1)
+    
+    # View the AutoML Leaderboard
+    lb <- aml@leaderboard
+    print(lb, n = nrow(lb))  # Print all rows instead of default (6 rows)
+    # Get leaderboard with all possible columns
+    lb <- h2o.get_leaderboard(object = aml, extra_columns = "ALL")
+    # lb
+    
+    
+    ###Examine Models
+    
+    # Get the best model using the metric
+    m <- aml@leader
+    # # this is equivalent to
+    # # m <- h2o.get_best_model(aml)
+    # 
+    # # Get the best model using a non-default metric
+    # m <- h2o.get_best_model(aml, criterion = "logloss")
+    # 
+    # # Get the best XGBoost model using default sort metric
+    # xgb <- h2o.get_best_model(aml, algorithm = "xgboost")
+    # 
+    # # Get the best XGBoost model, ranked by logloss
+    # xgb <- h2o.get_best_model(aml, algorithm = "xgboost", criterion = "logloss")
+    # 
+    # # Get a specific model by model ID
+    # m <- h2o.getModel("StackedEnsemble_BestOfFamily_AutoML_20191213_174603")
+    # # View the non-default parameter values for the XGBoost model above
+    # xgb@parameters
+    # 
+    # # Get AutoML event log
+    # log <- aml@event_log
+    # 
+    # # Get training timing info
+    # info <- aml@training_info
+    
+    results_ls$best_model <- m
+    results_ls$leaderboard <- lb 
+    return(results_ls)
+    
+  }
+  fn_h2o_res <- fn_h2o(datos, par_y_type="numeric")
+  
+  
+  h2o_r2 <- (fn_h2o_res$best_model@model$training_metrics@metrics$ r2)
+  h2o_mse <- (fn_h2o_res$best_model@model$training_metrics@metrics$MSE)
+  h2o_mae <- (fn_h2o_res$best_model@model$training_metrics@metrics$mae)
+  ###
   ### 6) COMPARACION DE RESULTADOS
   ###
   
@@ -1159,6 +1273,12 @@ for(j in 1:32){
     modelo = c("ols", "Stepwise","Lasso", "Ridge",  "PCR","PLS"),
     mse    = c(modelo_ols_results$test_mse_ols, modelo_step_results$test_mse_ols, modelo_lasso_results$test_mse_ols,
                modelo_ridge_results$test_mse_ridge, modelo_pcr_results$test_mse_ols, modelo_pls_results$test_mse_ols)
+  )
+  df_comparacion <- data.frame(
+    ent=j,
+    modelo = c("ols","Stepwise","Lasso", "Ridge","PCR","H2O"),
+    mse    = c(modelo_ols_results$test_mse_ols,modelo_step_results$test_mse_ols, modelo_lasso_results$test_mse_ols,
+               modelo_ridge_results$test_mse_ridge,modelo_pcr_results$test_mse_ols,h2o_mse)
   )
   
   mse_res[[j]] <- df_comparacion
@@ -1174,6 +1294,8 @@ for(j in 1:32){
   # de menos predictores.
   
 }
+
+
 
 do.call("rbind", mse_res)
 
