@@ -93,7 +93,59 @@ shinyUI(
                                       30,
                                       9)
                           )),#tabpanel
-      tabPanel("enoe")
+      tabPanel("enoe",
+               sidebarLayout(
+                 sidebarPanel(
+                   sliderInput("columnas",
+                               "Número de columnas general:",
+                               min = 1,
+                               max = 60,
+                               value = 30,
+                               animate = TRUE),
+                   sliderInput("columnas1",
+                               "Número de columnas cuidador:",
+                               min = 1,
+                               max = 60,
+                               value = 30,
+                               animate=TRUE),
+                   sliderInput("columnas2",
+                               "Número de columnas chofer:",
+                               min = 1,
+                               max = 60,
+                               value = 30,
+                               animate = TRUE),
+                   sliderInput("columnas3",
+                               "Número de columnas cocinero:",
+                               min = 1,
+                               max = 60,
+                               value = 30,
+                               animate = TRUE),
+                   sliderInput("columnas4",
+                               "Número de columnas enfermera:",
+                               min = 1,
+                               max = 60,
+                               value = 30,
+                               animate = TRUE),
+                   sliderInput("columnas5",
+                               "Número de columnas fisioterapeuta:",
+                               min = 1,
+                               max = 60,
+                               value = 30,
+                               animate = TRUE),
+                   sliderInput("columnas6",
+                               "Número de columnas mandadero:",
+                               min = 1,
+                               max = 60,
+                               value = 30,
+                               animate = TRUE)
+                   
+                 ),
+                 
+                 # Show a plot of the generated distribution
+                 mainPanel(
+                   plotOutput("distPlot")
+                 )
+               ))
     )#tabsetPanel,
   )#fluidPage
 )#ShinyUI
