@@ -206,3 +206,41 @@ jefes= filter(tsdem, PAREN==1) %>%
   select(c("nivelescolar", "hid"))
 
 thogar=left_join(thogar, jefes, on="hid")
+
+
+
+#Shiny
+thogar$puntos_nivel<- ifelse(thogar$nivelescolar=="No estudió",0,
+                             ifelse(thogar$nivelescolar=="Primaria incompleta",6,
+                                    ifelse(thogar$nivelescolar=="Primaria completa",11,
+                                           ifelse(thogar$nivelescolar=="Secundaria incompleta",12,
+                                                  ifelse(thogar$nivelescolar=="Secundaria completa",18,
+                                                         ifelse(thogar$nivelescolar=="Preparatoria incompleta",23,
+                                                                ifelse(thogar$nivelescolar=="Preparatoria completa",27,
+                                                                       ifelse(thogar$nivelescolar=="Licenciatura incompleta",36,
+                                                                              ifelse(thogar$nivelescolar=="Licenciatura completa",59,
+                                                                                     ifelse(thogar$nivelescolar=="Diplomado o maestría",85, 0))))))))))
+
+## 2. Baño en vivienda
+tvivienda$puntos_baño<- ifelse(tvivienda$sanitarioviv == "1", 24, 0)
+
+## 3. Automovil
+thogar$punto_automovil<- ifelse(thogar$automovilhog == "1", 22, 0)
+
+## 4. Internet
+thogar$puntos_internet<- ifelse(thogar$internethog == "1", 32, 0)
+
+## 5. Cuartos
+tvivienda$puntos_cuartos<- ifelse(tvivienda$P1_3=="1", 8,
+                           ifelse(tvivienda$P1_3=="2", 16,
+                           ifelse(tvivienda$P1_3=="3", 24, 
+                           ifelse(tvivienda$P1_3>="4", 32, 0))))
+
+## 6. Trabajadores por hogar 
+
+thogar$puntostrab<- ifelse(thogar$num_trab=="0", 0,
+                           ifelse(thogar$num_trab=="1", 15,
+                                  ifelse(thogar$num_trab=="2", 31,
+                                         ifelse(thogar$num_trab=="3", 46,
+                                                ifelse(thogar$num_trab>="4", 61, 0)))))
+
