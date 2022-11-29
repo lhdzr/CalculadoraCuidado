@@ -14,66 +14,61 @@ library(shiny)
 library(ggplot2)
 library(patchwork)
 enoe3 <- read.csv("../data/baseenoe.csv")
+load("equipo_3_modelado.R")
+tab_ent = data.frame(EST=c("Aguascalientes","Baja California", 
+                             "Baja California Sur", "Campeche", 
+                             "Coahuila", "Colima", "Chiapas", 
+                             "Chihuahua", "Durango", "Distrito Federal", 
+                             "Guanajuato", "Guerrero", "Hidalgo", 
+                             "Jalisco", "México", "Michoacán", "Morelos", 
+                             "Nayarit", "Nuevo León", "Oaxaca", "Puebla", 
+                             "Querétaro", "Quintana Roo", "San Luis Potosí", 
+                             "Sinaloa", "Sonora", "Tabasco", "Tamaulipas", 
+                             "Tlaxcala", "Veracruz", "Yucatán","Zacatecas"),
+                     ENT = c(1:32))
+tab_est_civ = data.frame(EST=c("Pareja en unión libre",
+                               "Separado",
+                               "Divorciado",
+                               "Viudo",
+                               "Casado",
+                               "Soltero"),
+                         NUM=c(1:6))
+tab_paren = data.frame(PAREN=c("Soy jefe de hogar",
+                               "Cónyuge/Pareja",
+                               "Hijo/Hija",
+                               "Nieto",
+                               "Yerno/Nuera",
+                               "Padre/Madre/Suegro",
+                               "Otro pariente",
+                               "Sin parentezco"),
+                       NUM=c(1:8))
+pars_usuario <- data.frame(pars=colnames(datos)[-c(1)], value=NA)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-
-  # output$distPlot <- renderPlot({
-  #   
-  #   # generate bins based on input$bins from ui.R
-  #   x    <- enoe3$sal_sem
-  #   columnas <- seq(min(x), max(x), length.out = input$columnas + 1)
-  #   
-  #   
-  #   # draw the histogram with the specified number of bins
-  #   
-  #   
-  #   enoe_cuidadores = filter(enoe3,p3==5222)
-  #   enoe_choferes = filter(enoe3,p3==8343)
-  #   enoe_enfermeras = filter(enoe3,p3==2811)
-  #   enoe_fisioterapeutas = filter(enoe3,p3==2812)
-  #   enoe_cocineros = filter(enoe3,p3==5113)
-  #   enoe_mandaderos = filter(enoe3,p3==9722)
-  #   x1    <- enoe_cuidadores$sal_sem
-  #   x2    <- enoe_choferes$sal_sem
-  #   x3    <- enoe_cocineros$sal_sem
-  #   x4    <- enoe_enfermeras$sal_sem
-  #   x5    <- enoe_fisioterapeutas$sal_sem
-  #   x6    <- enoe_mandaderos$sal_sem
-  #   columnas1 <- seq(min(x1), max(x1), length.out = input$columnas1 + 1)
-  #   columnas2 <- seq(min(x2), max(x2), length.out = input$columnas2 + 1)
-  #   columnas3 <- seq(min(x3), max(x3), length.out = input$columnas3 + 1)
-  #   columnas4 <- seq(min(x4), max(x4), length.out = input$columnas4 + 1)
-  #   columnas5 <- seq(min(x5), max(x5), length.out = input$columnas5 + 1)
-  #   columnas6 <- seq(min(x6), max(x6), length.out = input$columnas6 + 1)
-  #   par(mfcol = c(3, 3))
-  #   hist0<-hist(x, breaks = columnas, col = 'black', border = 'white',
-  #               xlab = 'Salario semanal',
-  #               main = 'Histograma de salarios general')
-  #   hist1<-hist(x1, breaks = columnas1, col = 'blue', border = 'white',
-  #               xlab = 'Salario semanal cuidadores',
-  #               main = 'Histograma de salarios cuiadadores')
-  #   hist2<-hist(x2, breaks = columnas2, col = 'purple', border = 'white',
-  #               xlab = 'Salario semanal choferes',
-  #               main = 'Histograma de salarios choferes')
-  #   hist3<-hist(x3, breaks = columnas3, col = 'yellow', border = 'white',
-  #               xlab = 'Salario semanal cocineros',
-  #               main = 'Histograma de salarios cocineros')
-  #   hist4<-hist(x4, breaks = columnas4, col = 'red', border = 'white',
-  #               xlab = 'Salario semanal enfermeras',
-  #               main = 'Histograma de salarios enfermeras')
-  #   hist5<-hist(x5, breaks = columnas5, col = 'green', border = 'white',
-  #               xlab = 'Salario semanal fisioterapeutas',
-  #               main = 'Histograma de salarios fisioterapeutas')
-  #   hist6<-hist(x6, breaks = columnas6, col = 'orange', border = 'white',
-  #               xlab = 'Salario semanal mandaderos',
-  #               main = 'Histograma de salarios mandaderos')
-  #   
-  # })
+  pars_usuario[1,"value"] = ifelse(input$Sexo=="Mujer",1,0)# SEXO
+  pars_usuario[2,"value"] = input$Edad # EDAD
+  pars_usuario[3,"value"] = tab_ent$ENT[tab_ent$EST==input$Estado]#ENT
+  pars_usuario[4,"value"] = input$Escolaridad#ESC
+  pars_usuario[5,"value"] = ifelse(input$Urbano=="Urbano",1,0)#urbano
+  pars_usuario[6,"value"] = #TIEMPO_TOTAL
+  pars_usuario[7,"value"] = tab_est_civ$NUM[tab_est_civ$EST==input$EstadoCivil] #SIT_CONYUGAL
+  pars_usuario[8,"value"] = ifelse(input$Indigena=="Sí",1,0)#INDIGENA
+  pars_usuario[9,"value"] = #TIPO_TRABAJO
+  pars_usuario[10,"value"] = ifelse(input$ProgramaSocial=="Sí",1,0)#PROGRAMA_SOCIAL
+  pars_usuario[11,"value"] = ifelse(input$Afiliacion=="Sí",1,0)#SEGURO_MEDICO
+  pars_usuario[12,"value"] = tab_paren$NUM[tab_paren$PAREN==input$Paren]#PAREN
+  pars_usuario[13,"value"] = #TIEMPO_CHOF    
+  pars_usuario[14,"value"] = #TIEMPO_COCIN
+  pars_usuario[15,"value"] = #TIEMPO_ENF_TEC
+  pars_usuario[16,"value"] = #TIEMPO_FISIO
+  pars_usuario[17,"value"] = #TIEMPO_CUID
+  pars_usuario[18,"value"] = input$nPersonas#NUM_PER
+  pars_usuario[19,"value"] = input$EscJefe#esc_jefe
+  pars_usuario[20,"value"] = ifelse(input$SexoJefe=="Mujer",1,0)#jefatura_femenina
+  pars_usuario[21,"value"] = input$EdadJefe#edad_jefe
     #AMAI
-
-    output$txtOutput = renderText({
-      Puntos_nivel<- ifelse(input$Esc_jefe=="No estudió",0,
+    Puntos_nivel<- ifelse(input$Esc_jefe=="No estudió",0,
                      ifelse(input$Esc_jefe=="Primaria incompleta",6,
                      ifelse(input$Esc_jefe=="Primaria completa",11,
                      ifelse(input$Esc_jefe=="Secundaria incompleta",12,
@@ -112,12 +107,8 @@ shinyServer(function(input, output) {
                     ifelse(Puntaje_AMAI>=141 & Puntaje_AMAI<=167, "C",
                     ifelse(Puntaje_AMAI>=168 & Puntaje_AMAI<=201, "C+",
                     ifelse(Puntaje_AMAI>=202, "A/B", "NA")))))))
-      
-      paste0("Tu Nivel Socioeconómico (NSE) según la Regla AMAI es: ", Clasif_AMAI)
-    
-    
-    
-  })
+      output$txtOutput = renderText({
+     paste0("Tu Nivel Socioeconómico (NSE) según la Regla AMAI es: ", Clasif_AMAI)})
     output$ingreso = renderText({
       
     })

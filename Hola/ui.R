@@ -73,7 +73,9 @@ shinyUI(
                                                                     c("Rural","Urbano")),
                                                        radioButtons("Indigena",
                                                                     "¿Se considera indígena?",
-                                                                    c("Sí","No")))),
+                                                                    c("Sí","No"))
+                                                       )
+                                            ),
                                    
                                    tabPanel("Acceso a seguridad social",
                                             h4("Ingresa tus datos de afiliación:"),
@@ -299,11 +301,23 @@ shinyUI(
                ),
                mainPanel(
                  h3("NSE"),
-                 p("El", em("Índice de Niveles Socioeconómicos (NSE)"), ", creado por la", strong("Asociación Mexicana de agencias de Inteligencia de Mercado y Opinión (AMAI), "), "es la regla, basada en un modelo estadístico, que permite agrupar y clasificar a los hogares mexicanos en siete niveles, de acuerdo a su capacidad para satisfacer las necesidades de sus integrantes."),
+                 p("El", em("Índice de Niveles Socioeconómicos (NSE)"), ", 
+                   creado por la", strong("Asociación Mexicana de agencias de 
+                   Inteligencia de Mercado y Opinión (AMAI), "), "es la regla, 
+                   basada en un modelo estadístico, que permite agrupar y 
+                   clasificar a los hogares mexicanos en siete niveles, de 
+                   acuerdo a su capacidad para satisfacer las necesidades de sus
+                   integrantes."),
                  textOutput("txtOutput"),
                  hr(),
-                 img(src="imagen.png", align = "center", height = 420, width = 320),
-                 img(src="imagen 2.png", align = "center", height = 420, width = 320))))
+                 img(src="imagen.png", 
+                     align = "center", 
+                     height = 420, 
+                     width = 320),
+                 img(src="imagen 2.png", 
+                     align = "center", 
+                     height = 420, 
+                     width = 320))))
       
     )#tabsetPanel,
   )#fluidPage
