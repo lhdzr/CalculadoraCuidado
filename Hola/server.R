@@ -107,11 +107,17 @@ shinyServer(function(input, output) {
                     ifelse(Puntaje_AMAI>=141 & Puntaje_AMAI<=167, "C",
                     ifelse(Puntaje_AMAI>=168 & Puntaje_AMAI<=201, "C+",
                     ifelse(Puntaje_AMAI>=202, "A/B", "NA")))))))
+
       output$txtOutput = renderText({
      paste0("Tu Nivel Socioeconómico (NSE) según la Regla AMAI es: ", Clasif_AMAI)})
     output$ingreso = renderText({
       
     })
+      
+      paste0("Tu Nivel Socioeconómico (NSE) según la Regla AMAI es: ", Clasif_AMAI)
+    
+    
+    
+  })
 
-})
   

@@ -1,4 +1,4 @@
-setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Desktop/1T/TEC 2022 - Concentración/RETOS/Equipo 3")
+#setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Desktop/1T/TEC 2022 - Concentración/RETOS/Equipo 3")
 
 # ==============================================================================
 library(faraway)
@@ -36,10 +36,7 @@ h2o.init()
 ### Datos
 ###########################
 
-# setwd("~/Library/Mobile DocumENTs/com~apple~CloudDocs/Desktop/1T/TEC 2022 - ConcENTración/Retos")
-bd <- read.csv("~/Library/Mobile DocumENTs/com~apple~CloudDocs/Desktop/1T/TEC 2022 - ConcENTración/Retos/Equipo 3/bd2.csv")
-# bd <- read.csv("~/Library/Mobile DocumENTs/com~apple~CloudDocs/Desktop/1T/TEC 2022 - ConcENTración/Retos/Equipo 1/Base_Enoe_Clase.csv")
-
+bd <- read.csv("products/csv/bd.csv")
 ## REORDENAMIENTO DE LAS COLUMNAS
 id_y <- grep("SAL_SEM", colnames(bd))
 y_name <- colnames(bd)[id_y]
@@ -164,12 +161,12 @@ fn_modelado <- function(datos,
                         par_vars_x_seleccion_step=T,
                         par_h2o_max_runtime_secs=5){
   # 
-  # ## @ PARAMETROS
-  # par_interacciones=F
-  # par_sample_h20 <- 0.3
-  # par_y_log=T
-  # par_vars_x_seleccion_step=T
-  # par_h2o_max_runtime_secs=30
+  ## @ PARAMETROS
+  par_interacciones=F
+  par_sample_h20 <- 0.3
+  par_y_log=T
+  par_vars_x_seleccion_step=T
+  par_h2o_max_runtime_secs=30
   
   
   ## listas donde se guardaran los resultados: MSE,R2 y modelos
@@ -192,7 +189,7 @@ fn_modelado <- function(datos,
   
   
   j=1
-  for(j in 1:32){
+  for(j in 1:3){
     
     print(c(j, 32))
     
@@ -1214,19 +1211,7 @@ fn_modelado <- function(datos,
     h2o_randomforest_r2 <- fn_h2o_res_randomforest$rf_perf2@metrics$r2
     modelo_randomforest_coef <- fn_h2o_res_randomforest$varimp
     
-    ###
-    ### 7) XGBOOST
-    ###
-    
-    fn_h2o_res_xgboost <- fn_h2o(datos__=datos_train_h20,
-                                 datos_test__=datos_test_h20,
-                                 par_y_type="numeric",
-                                 par_y_log=T,
-                                 par_h2o_max_runtime_secs,
-                                 par_modelo_h2o="xgboost")
-    h2o_xgboost_mse <- fn_h2o_res_xgboost$rf_perf2@metrics$MSE
-    h2o_xgboost_r2 <- fn_h2o_res_xgboost$rf_perf2@metrics$r2
-    modelo_xgboost_coef <- fn_h2o_res_xgboost$varimp
+
     
     ###
     ### 8) NEURAL NETWORK
@@ -1248,7 +1233,7 @@ fn_modelado <- function(datos,
       h2o_neural_network_r2 <- NA
       fn_h2o_res_neural_network <- list()
       fn_h2o_res_neural_network$modelo <- NA
-      modelo_neural_network_coef <- fn_h2o_res_neural_network$varimp
+      modelo_neural_network_coef <- NA
       
     }
     
