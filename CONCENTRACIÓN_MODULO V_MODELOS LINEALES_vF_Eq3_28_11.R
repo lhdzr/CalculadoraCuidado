@@ -36,14 +36,15 @@ h2o.init()
 ### Datos
 ###########################
 
-bd <- read.csv("products/csv/bd.csv")
+bd <- read.csv("bd.csv")
+
 ## REORDENAMIENTO DE LAS COLUMNAS
 id_y <- grep("SAL_SEM", colnames(bd))
 y_name <- colnames(bd)[id_y]
 bd <- data.frame(bd[,id_y], bd[,-id_y])
 colnames(bd)[1] <- y_name
 # head(bd)
-# bd <- read.csv("Equipo 1/BaseEnoe.csv")
+
 
 ## se elimina la primera columa con el index
 # bd <- bd[,-c(1)]

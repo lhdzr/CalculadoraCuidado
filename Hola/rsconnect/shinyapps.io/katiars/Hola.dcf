@@ -5,9 +5,9 @@ account: katiars
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7627619
-bundleId: 6552208
+bundleId: 6568620
 url: https://katiars.shinyapps.io/Hola/
-when: 1669332643.24716
-lastSyncTime: 1669332643.24718
+when: 1669745390.43786
+lastSyncTime: 1669745390.43794
 asMultiple: FALSE
 asStatic: FALSE
