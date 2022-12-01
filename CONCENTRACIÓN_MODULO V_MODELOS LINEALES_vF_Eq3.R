@@ -1,5 +1,5 @@
 #setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Desktop/1T/TEC 2022 - Concentración/RETOS/Equipo 3")
-
+setwd("C:/Users/hecto/Documents/Finanzas clase/ChileTextMining")
 # ==============================================================================
 library(faraway)
 
@@ -36,7 +36,11 @@ h2o.init()
 ### Datos
 ###########################
 
-bd = read.csv("products/csv/bd.csv")
+# setwd("~/Library/Mobile DocumENTs/com~apple~CloudDocs/Desktop/1T/TEC 2022 - ConcENTración/Retos")
+#bd <- read.csv("~/Library/Mobile DocumENTs/com~apple~CloudDocs/Desktop/1T/TEC 2022 - ConcENTración/Retos/Equipo 3/bd2.csv")
+# bd <- read.csv("~/Library/Mobile DocumENTs/com~apple~CloudDocs/Desktop/1T/TEC 2022 - ConcENTración/Retos/Equipo 1/Base_Enoe_Clase.csv")
+
+bd <- read.csv("products/csv/bd.csv")
 ## REORDENAMIENTO DE LAS COLUMNAS
 id_y <- grep("SAL_SEM", colnames(bd))
 y_name <- colnames(bd)[id_y]
@@ -47,18 +51,23 @@ colnames(bd)[1] <- y_name
 
 ## se elimina la primera columa con el index
 # bd <- bd[,-c(1)]
-
-## se le da formato a las variables categorias
+# 
+# ## se le da formato a las variables categorias
 bd$SEXO<- as.factor(bd$SEXO)
-bd$urbano <- as.numeric(bd$urbano)
+#bd$ENT<-as.factor(bd$ENT)
+bd$urbano <- as.factor(bd$urbano)
 bd$INDIGENA <- as.factor(bd$INDIGENA)
 bd$PROGRAMA_SOCIAL <- as.factor(bd$PROGRAMA_SOCIAL)
 bd$SEGURO_MEDICO <- as.factor(bd$SEGURO_MEDICO)
 bd$PAREN <- as.factor(bd$PAREN)
 bd$jefatura_femenina <- as.factor(bd$jefatura_femenina)
+bd$TIPO_TRABAJO <- as.factor(bd$TIPO_TRABAJO)
+bd$SIT_CONYUGAL <- as.factor(bd$SIT_CONYUGAL)
 
 ### se corrige el nombre de la columna de Entidad
-colnames(bd)[which(names(bd)=="Entidad")] <- "ENT"
+colnames(bd)[which(names(bd)=="ENT")] <- "ent"
+
+#colnames(bd)[which(names(bd)=="Entidad")] <- "ENT"
 
 ### se consideran los valores mayores a 0
 # length(which(bd$SAL_SEM>0))
@@ -89,6 +98,11 @@ bd_mice <- mice::complete(bd_mice)
 # datos <- bd_mice_val
 
 datos <- bd_mice
+datos <- datos[,-grep("PROGRAMA_SOCIAL", colnames(datos))]
+save(datos, file="datos_eq3.R")
+
+# load("datos_eq3.R")
+
 
 ## estandarizacion de la variable de respuesta para la evaluacion del MSE 
 # bd_mice$SAL_SEM <- scale(bd_mice$SAL_SEM)
@@ -118,16 +132,16 @@ datos <- bd_mice
 # evaluar la capacidad predictiva de cada modelo, se dividen las observaciones 
 # disponibles en dos grupos: uno de ENTrenamiENTo (70%) y otro de test (30%).
 
-###
+###     
 ### Definicion de formula
 ###
 
 # Creación y ENTrenamiENTo del modelo
 # ==============================================================================
 
-par_var_x <- colnames(datos)[-c(1, grep("ENT", colnames(datos)))]
+par_var_x <- colnames(datos)[-c(1, grep("ent", colnames(datos)))]
 
-head(datos)
+# head(datos)
 
 ### GRID DE COMBINACIONES DE VARIABLES REGRESORAS
 ncols_vars_x <- length(par_var_x)
@@ -148,20 +162,23 @@ par_seed <- set.seed(1)
 ## se define la transformacion logaritmica
 par_y_log =T
 
+# colnames(datos)
+
 ## LOOP de ENTidades
 fn_modelado <- function(datos, 
-                        par_interacciones=F, 
+                        par_interacciones=T, 
                         par_sample_h20=0.5,
                         par_y_log=T,
                         par_vars_x_seleccion_step=T,
-                        par_h2o_max_runtime_secs=30){
-  
+                        par_h2o_max_runtime_secs=5){
+  # 
   # ## @ PARAMETROS
   # par_interacciones=T
-  # par_sample_h20 <- 0.3
+  # par_sample_h20 <- 0.5
   # par_y_log=T
   # par_vars_x_seleccion_step=T
   # par_h2o_max_runtime_secs=30
+  
   
   ## listas donde se guardaran los resultados: MSE,R2 y modelos
   results_ls <- list()
@@ -169,10 +186,19 @@ fn_modelado <- function(datos,
   results_ls$mse <- list()
   results_ls$modelos <- list()
   results_ls$bd <- list()
+  results_ls$formula_i_global <- list()
   
   ###
   ### TRANSFORMACION DE LA VARIABLE Y A LOG(Y)
   ###
+  
+  if(par_y_log){
+    y_formula <- paste("log(",colnames(datos)[1], ")", sep="")
+  }else{
+    y_formula <- paste(colnames(datos)[1])
+  }
+  x_formula <- paste(colnames(datos)[-c(1, grep("ent", colnames(datos)))], collapse="+")
+  
   
   j=2
   for(j in 1:32){
@@ -181,7 +207,7 @@ fn_modelado <- function(datos,
     
     # Se filtra segun ENTidad
     # ==============================================================================
-    id_ENT_j <- which(datos$ENT==j)
+    id_ENT_j <- which(datos$ent==j)
     datos_ENT_j <- datos[id_ENT_j,]
     
     # lapply(datos_ENT_j, FUN=summary)
@@ -193,10 +219,11 @@ fn_modelado <- function(datos,
     id_cols_factor <- which(lapply(datos_ENT_j, class)=="factor")
     
     rows_elim_ls <- list()
-    k=3
+    k=1
     for(k in 1:ncol(datos_ENT_j[,id_cols_factor])){
       
       print(c(k, ncol(datos_ENT_j[,id_cols_factor])))
+      
       table_Entidad_nacimiento <- table(datos_ENT_j[,id_cols_factor][,k])
       id_elim <- which(table_Entidad_nacimiento<15)
       
@@ -212,68 +239,73 @@ fn_modelado <- function(datos,
       }
       
     }
-    
     id_elim_factores_pequenios <- unlist(rows_elim_ls)
     
     if(length(id_elim_factores_pequenios)>0){
       datos_ENT_j <- datos_ENT_j[-id_elim_factores_pequenios,]
     }
+    
+    # ## en este for se quitan las variable que tienen un solo nivel de factor
+    # 
+    # cols_elim <- list()
+    # k=3
+    # for(k in 1:ncol(datos_ENT_j[,id_cols_factor])){
+    #   
+    #   print(c(k, ncol(datos_ENT_j[,id_cols_factor])))
+    #   
+    #   table_Entidad_nacimiento <- table(datos_ENT_j[,id_cols_factor][,k])
+    #   
+    #   id_menos_cero <- which(table_Entidad_nacimiento==0)
+    #   if(length(id_menos_cero)>0){
+    #     condi <- length(table_Entidad_nacimiento[-id_menos_cero])
+    #     if(condi<=1){
+    #       
+    #       cols_elim[[j]] <- colnames(datos_ENT_j)[id_cols_factor][k]
+    #     }
+    #   }
+    #   
+    # }
+    # 
+    # cols_elim <- unlist(cols_elim)
+    # # elimino la(s) columna(s)
+    # if(length(cols_elim)>0){
+    #   datos_ENT_j <- datos_ENT_j[,-cols_elim]
+    #   
+    # }
 
+
+    
     # División de los datos en train y test
     # ==============================================================================
     
-    set.seed(40)
+    set.seed(par_seed)
     id_train <- sample(1:nrow(datos_ENT_j), size = 0.7*nrow(datos_ENT_j), replace = FALSE)
     
     datos_train_0 <- datos_ENT_j[id_train, ]
     dim(datos_train_0)
-    datos_train <- datos_train_0[,-grep("ENT", colnames(datos_train_0))]
+    datos_train <- datos_train_0[,-grep("ent", colnames(datos_train_0))]
     
     datos_test_0 <- datos_ENT_j[-id_train, ]
     dim(datos_test_0)
-    datos_test <- datos_test_0[,-grep("ENT", colnames(datos_test_0))]
-    
-    ###
-    ### SE OMITEN LAS COLUMNAS/VARIABLES QUE TIENEN NULA INFORMACIÓN (O INFORMACION CONSTANTE)
-    ###
-    id_cols_factors <- which(lapply(datos_train, class)=="factor")
-    fn_columna_sin_var <- function(datos_train, id_cols_factors){
-
-      id_col_elim <- which(lapply(datos_train[,id_cols_factors], FUN=function(x){which(table(x)==length(x))})>0)
-      if(length(id_col_elim)>0){
-        datos_train<- datos_train[,-grep(colnames(datos_train[,id_cols_factors])[id_col_elim], colnames(datos_train))]
-      }
-
-      return(datos_train)
-    }
-    datos_train <- fn_columna_sin_var(datos_train, id_cols_factors)
-    datos_test <- fn_columna_sin_var(datos_test, id_cols_factors)
-    
+    datos_test <- datos_test_0[,-grep("ent", colnames(datos_test_0))]
     
     ###
     ### SE CONSTRUYE LA FORMULA DE ORDEN 1
     ###
-    
-    if(par_y_log){
-      y_formula <- paste("log(",colnames(datos_train)[1], ")", sep="")
-    }else{
-      y_formula <- paste(colnames(datos_train)[1])
-    }
-    x_formula <- paste(colnames(datos_train)[-c(1, grep("ENT", colnames(datos_train)))], collapse="+")
-    
-    par_var_x <- colnames(datos_train)[-c(id_y, grep("ENT", colnames(datos_train)))]
+    id_y <- grep("SAL_SEM", colnames(datos))
+    par_var_x <- colnames(datos)[-c(id_y, grep("ent", colnames(datos)))]
     
     ### formula sin interacciones
-    x_formula <- paste(x_formula, collapse=" + ")
+    x_formula <- paste(par_var_x, collapse=" + ")
     formula_i <-as.formula(paste(y_formula,x_formula, sep="~"))
-    formula_i_global <<- formula_i
-    # View(datos_train)
-    
+    results_ls$formula_i_global <- formula_i
+    # formula_i_global <<- formula_i
+    print(results_ls$formula_i_global)
     
     ###
     ### 1) METODO: Mínimos cuadrados (OLS) - SOLO COMO UN MODELO BASICO DE REFERENCIA
     ###
-    
+    # table(datos_train$PROGRAMA_SOCIAL)
     modelo_ols <- function(formula_i, 
                            datos_train, 
                            datos_test){
@@ -281,15 +313,15 @@ fn_modelado <- function(datos,
       ### lista donde se guardaran klos resultdos
       results_ls <- list()
       
+      # View(datos_train)
       # Creación y ENTrenamiENTo del modelo
       # ==============================================================================
-     
       modelo <- try(lm(formula_i, data = datos_train), silent=T)
       # table(datos_train$Oficio)
       # table(datos_test$Oficio)
       
       if(class(modelo)!="try-error"){
-        # modelo <- lm(log(SAL_SEM) ~ ., data = datos_train)
+        # modelo <- lm(log(Ingreso_mensual) ~ ., data = datos_train)
         # summary(modelo)
         summary_i <- summary(modelo)
       }else{
@@ -383,6 +415,7 @@ fn_modelado <- function(datos,
     modelo_ols_results <- modelo_ols(formula_i, datos_train, datos_test)
     modelo_ols_mse <- modelo_ols_results$test_mse_ols
     modelo_ols_r2 <- modelo_ols_results$adj.r.squared
+    modelo_ols_coef <- modelo_ols_results$summary_i$coefficients
     
     ###
     ### 2) METODO: Stepwise Selection. Para seleccionar las variables mas significativas en un modelo de primer orden
@@ -411,7 +444,7 @@ fn_modelado <- function(datos,
       )
       # length(attr(modelo$terms, "term.labels"))
       # dim(datos_train)
-
+      
       # dim(datos_train)
       summary_i <- summary(modelo)
       print(paste("ENT",j, "stepwise ","R2adj=", summary_i$adj.r.squared, sep=" "))
@@ -479,6 +512,7 @@ fn_modelado <- function(datos,
     modelo_step_results <- modelo_step(formula_i, datos_train, datos_test)
     modelo_step_mse <- modelo_step_results$test_mse_ols
     modelo_step_r2 <- modelo_step_results$summary_i$adj.r.squared
+    modelo_step_coef <- modelo_step_results$summary_i$coefficients
     
     ###
     ### 3) Si se desea, se pueden generar un listado de terminos cuadraticos (interacciones de variables) basado unicamente en las variables seleccionadas en Step.
@@ -524,12 +558,11 @@ fn_modelado <- function(datos,
         formula_i_2 <-as.formula(paste(y_formula,paste(x_formula, collapse="+"), sep="~"))
         
       }
-      
     }else{
       par_vars_select <- colnames(datos_train)
       formula_i_2 <- formula_i
     }
-  
+    
     ###
     ### 3) METODO: Ridge
     ###
@@ -592,7 +625,7 @@ fn_modelado <- function(datos,
       # max(rsq)
       
       
-
+      
       # glmnet() almacena en una matriz el valor de los coeficiENTes de regresión para 
       # cada valor de lambda. Esto permite acceder, mediante la función coef(), a los 
       # coeficiENTes obtenidos para un determinado valor de lambda (que haya sido incluido 
@@ -633,7 +666,7 @@ fn_modelado <- function(datos,
       
       # Evolución del error en función de lambda
       # ==============================================================================
-      set.seed(123)
+      set.seed(par_seed)
       cv_error <- cv.glmnet(
         x      = x_train,
         y      = y_train,
@@ -748,7 +781,7 @@ fn_modelado <- function(datos,
       results_ls$modelo <- modelo
       results_ls$test_mse_ridge <- test_mse_ridge
       results_ls$training_mse <- training_mse
-      results_ls$summary_i <- summary_i
+      results_ls$coef <- as.data.frame(df_coeficiENTes)
       results_ls$performance_statistics <- performance_statistics
       
       return(results_ls)
@@ -759,6 +792,8 @@ fn_modelado <- function(datos,
                                          datos_test[,par_vars_select])
     modelo_ridge_mse <- modelo_ridge_results$test_mse_ridge
     modelo_ridge_r2 <- modelo_ridge_results$performance_statistics$Rsquare
+    modelo_ridge_coef <- modelo_ridge_results$coef
+    
     
     ###
     ### 4) METODO: Lasso
@@ -835,7 +870,7 @@ fn_modelado <- function(datos,
       
       # Evolución del error en función de lambda
       # ==============================================================================
-      set.seed(123)
+      set.seed(par_seed)
       cv_error <- cv.glmnet(
         x      = x_train,
         y      = y_train,
@@ -960,7 +995,7 @@ fn_modelado <- function(datos,
       results_ls$modelo <- modelo
       results_ls$test_mse_ols <- test_mse_lasso
       results_ls$training_mse <- training_mse
-      results_ls$summary_i <- summary_i
+      results_ls$coef <- as.data.frame(df_coeficiENTes)
       results_ls$performance_statistics <- performance_statistics
       
       return(results_ls)
@@ -971,6 +1006,7 @@ fn_modelado <- function(datos,
                                          datos_test[,par_vars_select])
     modelo_lasso_mse <- modelo_lasso_results$test_mse_ols
     modelo_lasso_r2 <- modelo_lasso_results$performance_statistics$Rsquare
+    modelo_lasso_coef <- modelo_lasso_results$coef
     
     # ###
     # ### 5) METODOS DE ML (H2O)
@@ -981,18 +1017,19 @@ fn_modelado <- function(datos,
     datos_test_h20 <- datos_test[sample(1:nrow(datos_test), (par_sample_h20*nrow(datos_test)), F),par_vars_select]
     # dim(datos_train_h20)
     # dim(datos_test_h20)
-    
     fn_h2o <- function(datos__,
                        datos_test__,
                        par_y_type="numeric",
                        par_y_log=F,
-                       par_h2o_max_runtime_secs){
+                       par_h2o_max_runtime_secs,
+                       par_modelo_h2o){
       
       # ###@parametros
       # par_y_type="numeric"
       # datos__ <- datos_train_h20
       # datos_test__ <- datos_test_h20
       # par_h2o_max_runtime_secs=60
+      # par_modelo_h2o="xgboost"
       
       ## lista de resultados
       results_ls <- list()
@@ -1023,40 +1060,46 @@ fn_modelado <- function(datos,
       ### MODELOS ESPECIFICOS 
       ###
       
-      # # ?h2o.randomForest
-      # aml <- h2o.randomForest(x = x,
-      #                         y = y,
-      #                         training_frame = datos_,
-      #                         model_id = "our.rf",
-      #                         seed = 1234)
-      # 
-      # # # Build and train the model: ## NO FUNCIONA BIEN (REVISAR)
-      # # aml <- h2o.xgboost(x = x,
-      # #                    y = y,
-      # #                   training_frame = datos_,
-      # #                   booster = "dart",
-      # #                   normalize_type = "tree",
-      # #                   seed = 1234)
-      # 
-      # 
-      # # Build and train the model:
-      # aml <- h2o.deeplearning(x = x,
-      #                         y = y,
-      #                         distribution = "tweedie",
-      #                         hidden = c(1),
-      #                         epochs = 1000,
-      #                         train_samples_per_iteration = -1,
-      #                         reproducible = TRUE,
-      #                         activation = "Tanh",
-      #                         single_node_mode = FALSE,
-      #                         balance_classes = FALSE,
-      #                         force_load_balance = FALSE,
-      #                         seed = 23123,
-      #                         tweedie_power = 1.5,
-      #                         score_training_samples = 0,
-      #                         score_validation_samples = 0,
-      #                         training_frame = datos_,
-      #                         stopping_rounds = 0)
+      if(par_modelo_h2o=="randomforest"){
+        # ?h2o.randomForest
+        m <- h2o.randomForest(x = x,
+                              y = y,
+                              training_frame = datos_,
+                              model_id = "our.rf",
+                              seed = 1234)
+      }
+      
+      if(par_modelo_h2o=="xgboost"){
+        # Build and train the model: ## NO FUNCIONA BIEN (REVISAR)
+        m <- h2o.xgboost(x = x,
+                         y = y,
+                         training_frame = datos_,
+                         booster = "dart",
+                         normalize_type = "tree",
+                         seed = 1234)
+      }
+      
+      if(par_modelo_h2o=="neural_network"){
+        # Build and train the model:
+        m <- h2o.deeplearning(x = x,
+                              y = y,
+                              distribution = "tweedie",
+                              hidden = c(1),
+                              epochs = 1000,
+                              train_samples_per_iteration = -1,
+                              reproducible = TRUE,
+                              activation = "Tanh",
+                              single_node_mode = FALSE,
+                              balance_classes = FALSE,
+                              force_load_balance = FALSE,
+                              seed = 23123,
+                              tweedie_power = 1.5,
+                              score_training_samples = 0,
+                              score_validation_samples = 0,
+                              training_frame = datos_,
+                              stopping_rounds = 0)
+      }
+      
       # 
       # rf_perf2 <- h2o.performance(model = aml, newdata = datos_test_)
       # print(rf_perf2)
@@ -1069,13 +1112,14 @@ fn_modelado <- function(datos,
       ### METODO AUTOMATICO PARA LA SELECCION DEL MEJOR MODELO
       ###
       # Run AutoML for 20 base models
-      set.seed(par_seed)
-      aml <- h2o.automl(x = x,
-                        y = y,
-                        training_frame = datos_,
-                        max_models = 20,
-                        max_runtime_secs=par_h2o_max_runtime_secs,
-                        seed = 1)
+      # ?h2o.automl
+      # set.seed(par_seed)
+      # aml <- h2o.automl(x = x,
+      #                   y = y,
+      #                   training_frame = datos_,
+      #                   max_models = 20,
+      #                   max_runtime_secs=par_h2o_max_runtime_secs,
+      #                   seed = 1)
       # # View the AutoML Leaderboard
       # lb <- aml@leaderboard
       # lb
@@ -1083,16 +1127,16 @@ fn_modelado <- function(datos,
       # lb2
       # print(lb, n = nrow(lb))  # Print all rows instead of default (6 rows)
       
-      # Get leaderboard with all possible columns
-      lb <- h2o.get_leaderboard(object = aml, extra_columns = "ALL")
-      lb
+      # # Get leaderboard with all possible columns
+      # lb <- h2o.get_leaderboard(object = aml, extra_columns = "ALL")
+      # lb
       # lb2 <- h2o.get_leaderboard(object = aml2, extra_columns = "ALL")
       # lb2
       
       ###Examine Models
       
       # Get the best model using the metric
-      m <- aml@leader
+      # m <- aml@leader
       # m2 <- aml2@leader
       
       ### Parametros de la funcions "automl"
@@ -1122,8 +1166,9 @@ fn_modelado <- function(datos,
         # info <- aml@datos_ing_info
       }
       
+      
       rf_perf2 <- h2o.performance(model = m, newdata = datos_test_)
-      # print(rf_perf2)
+      print(rf_perf2)
       
       predictions <- h2o.predict(m, datos_test_)
       test_mse_ols <- mean((predictions - datos_test_[,1])^2)
@@ -1151,21 +1196,75 @@ fn_modelado <- function(datos,
       performance_statistics <- eval_results(true=datos_test_[,1], predicted=predictions, df= datos_test_)
       # performance_statistics
       
+      
+      ### Importancia de variables
+      varimp <- h2o.varimp(m)
+      
+      
       results_ls$modelo <- m
-      # m@model$training_metrics@metrics
-      results_ls$leaderboard <- lb
+      # results_ls$leaderboard <- lb
       results_ls$rf_perf2 <- rf_perf2
       results_ls$performance_statistics <- performance_statistics
+      results_ls$varimp <- varimp
+      
       
       return(results_ls)
       
     }
-    fn_h2o_res <- fn_h2o(datos__=datos_train_h20,
-                         datos_test__=datos_test_h20,
-                         par_y_type="numeric",
-                         par_y_log=T,
-                         par_h2o_max_runtime_secs)
-    ## !! revisar estos resultados
+    
+    ###
+    ### 6) RANDOMFOREST
+    ###
+    
+    fn_h2o_res_randomforest <- fn_h2o(datos__=datos_train_h20,
+                                      datos_test__=datos_test_h20,
+                                      par_y_type="numeric",
+                                      par_y_log=T,
+                                      par_h2o_max_runtime_secs,
+                                      par_modelo_h2o="randomforest")
+    h2o_randomforest_mse <- fn_h2o_res_randomforest$rf_perf2@metrics$MSE
+    h2o_randomforest_r2 <- fn_h2o_res_randomforest$rf_perf2@metrics$r2
+    modelo_randomforest_coef <- fn_h2o_res_randomforest$varimp
+    
+    ###
+    ### 7) XGBOOST
+    ###
+    
+    # fn_h2o_res_xgboost <- fn_h2o(datos__=datos_train_h20,
+    #                              datos_test__=datos_test_h20,
+    #                              par_y_type="numeric",
+    #                              par_y_log=T,
+    #                              par_h2o_max_runtime_secs,
+    #                              par_modelo_h2o="xgboost")
+    # h2o_xgboost_mse <- fn_h2o_res_xgboost$rf_perf2@metrics$MSE
+    # h2o_xgboost_r2 <- fn_h2o_res_xgboost$rf_perf2@metrics$r2
+    # modelo_xgboost_coef <- fn_h2o_res_xgboost$varimp
+    
+    ###
+    ### 8) NEURAL NETWORK
+    ###
+    
+    fn_h2o_res_neural_network <-  try(fn_h2o(datos__=datos_train_h20,
+                                             datos_test__=datos_test_h20,
+                                             par_y_type="numeric",
+                                             par_y_log=T,
+                                             par_h2o_max_runtime_secs,
+                                             par_modelo_h2o="neural_network"), silent=T)
+    if(class(fn_h2o_res_neural_network)!="try-error"){
+      h2o_neural_network_mse <-fn_h2o_res_neural_network$rf_perf2@metrics$MSE
+      h2o_neural_network_r2 <- fn_h2o_res_neural_network$rf_perf2@metrics$r2
+      modelo_neural_network_coef <- fn_h2o_res_neural_network$varimp
+      
+    }else{
+      h2o_neural_network_mse <-NA
+      h2o_neural_network_r2 <- NA
+      fn_h2o_res_neural_network <- list()
+      fn_h2o_res_neural_network$modelo <- NA
+      modelo_neural_network_coef <- fn_h2o_res_neural_network$varimp
+      
+    }
+    
+    
     {
       # h2o_r2 <- (fn_h2o_res$best_model@model$training_metrics@metrics$r2)
       # h2o_r2
@@ -1173,10 +1272,10 @@ fn_modelado <- function(datos,
       # h2o_mse
       # h2o_mae <- (fn_h2o_res$best_model@model$training_metrics@metrics$mae)
     }
-    h2o_model_name <- fn_h2o_res$modelo@algorithm
+    # h2o_model_name <- fn_h2o_res$modelo@algorithm
     # h2o_r2 <- fn_h2o_res$performance_statistics$Rsquare
-    h2o_mse <- fn_h2o_res$rf_perf2@metrics$MSE
-    h2o_r2 <- fn_h2o_res$rf_perf2@metrics$r2
+    # h2o_mse <- fn_h2o_res$rf_perf2@metrics$MSE
+    # h2o_r2 <- fn_h2o_res$rf_perf2@metrics$r2
     
     ###
     ### --> COMPARACION DE RESULTADOS
@@ -1191,9 +1290,9 @@ fn_modelado <- function(datos,
     
     df_mse_comparacion <- data.frame(
       ENT=j,
-      modelo = c("OLS", "Stepwise","Lasso", "Ridge", paste("H2O",h2o_model_name, sep="_")),
+      modelo = c("OLS", "Stepwise","Lasso", "Ridge", "Randomforest", "Xgboost", "Neural_network"),
       mse    = c(modelo_ols_results$test_mse_ols, modelo_step_results$test_mse_ols, modelo_lasso_results$test_mse_ols,
-                 modelo_ridge_results$test_mse_ridge, h2o_mse))
+                 modelo_ridge_results$test_mse_ridge,h2o_randomforest_mse,h2o_xgboost_mse, h2o_neural_network_mse))
     
     # df_mse_comparacion <- data.frame(
     #   ENT=j,
@@ -1203,7 +1302,7 @@ fn_modelado <- function(datos,
     
     
     ## se ordena tabla segun tamanio del estadistico
-    df_mse_comparacion <- df_mse_comparacion[order(df_mse_comparacion$mse, decreasing = T),]
+    # df_mse_comparacion <- df_mse_comparacion[order(df_mse_comparacion$mse, decreasing = T),]
     rownames(df_mse_comparacion) <- 1:nrow(df_mse_comparacion)
     
     ## se grafica
@@ -1213,11 +1312,17 @@ fn_modelado <- function(datos,
       theme_bw() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
     
+    # df_r2_comparacion <- data.frame(
+    #   ENT=j,
+    #   modelo = c("OLS", "Stepwise","Lasso", "Ridge", paste("H2O",h2o_model_name, sep="_")),
+    #   r2    = c(modelo_ols_r2, modelo_step_r2, modelo_lasso_r2,
+    #              modelo_ridge_r2, h2o_r2))
+    
     df_r2_comparacion <- data.frame(
       ENT=j,
-      modelo = c("OLS", "Stepwise","Lasso", "Ridge", paste("H2O",h2o_model_name, sep="_")),
+      modelo=c("OLS", "Stepwise","Lasso", "Ridge", "Randomforest", "Xgboost", "Neural_network"),
       r2    = c(modelo_ols_r2, modelo_step_r2, modelo_lasso_r2,
-                 modelo_ridge_r2, h2o_r2))
+                modelo_ridge_r2, h2o_randomforest_r2, h2o_xgboost_r2, h2o_neural_network_r2))
     
     # df_r2_comparacion <- data.frame(
     #   ENT=j,
@@ -1226,7 +1331,7 @@ fn_modelado <- function(datos,
     #             modelo_ridge_r2))
     
     ## se ordena tabla segun tamanio del estadistico
-    df_r2_comparacion <- df_r2_comparacion[order(df_r2_comparacion$r2, decreasing = T),]
+    # df_r2_comparacion <- df_r2_comparacion[order(df_r2_comparacion$r2, decreasing = T),]
     rownames(df_r2_comparacion) <- 1:nrow(df_r2_comparacion)
     
     ## se grafica
@@ -1238,7 +1343,20 @@ fn_modelado <- function(datos,
     
     results_ls$r2[[j]] <- df_r2_comparacion
     results_ls$mse[[j]] <- df_mse_comparacion
-    results_ls$modelos[[j]] <- list(modelo_ols_results$modelo, modelo_step_results$modelo, modelo_lasso_results$modelo, modelo_ridge_results$modelo, fn_h2o_res$modelo)
+    results_ls$modelos[[j]] <- list(modelo_ols_results$modelo, 
+                                    modelo_step_results$modelo, 
+                                    modelo_lasso_results$modelo,
+                                    modelo_ridge_results$modelo, 
+                                    fn_h2o_res_randomforest$modelo, 
+                                    fn_h2o_res_xgboost$modelo, 
+                                    fn_h2o_res_neural_network$modelo)
+    results_ls$coef[[j]] <- list(modelo_ols_coef[,1:2], 
+                                 modelo_step_coef[,1:2], 
+                                 modelo_lasso_coef[,1:2], 
+                                 modelo_ridge_coef[,1:2], 
+                                 modelo_randomforest_coef[,1:2], 
+                                 modelo_xgboost_coef[,1:2], 
+                                 modelo_neural_network_coef[,1:2])
     # results_ls_modelos$Stepwise[[j]] <- modelo_step_results$modelo
     # results_ls_modelos$Lasso[[j]] <- modelo_lasso_results$modelo
     # results_ls_modelos$Ridge[[j]] <- modelo_ridge_results$modelo
@@ -1251,111 +1369,26 @@ fn_modelado <- function(datos,
 }
 fn_modelado_res <- fn_modelado(datos, 
                                par_interacciones=T, 
-                               par_sample_h20=0.5,
-                               par_y_log,
+                               par_sample_h20=0.7,
+                               par_y_log=T,
                                par_vars_x_seleccion_step=T,
                                par_h2o_max_runtime_secs=30)
 
-wr2_ENTidades <- do.call("rbind", fn_modelado_res$r2)
+r2_ENTidades <- do.call("rbind", fn_modelado_res$r2)
 mse_ENTidades <- do.call("rbind", fn_modelado_res$mse)
+
 
 ###
 ### FUNCION DE PREDICCION CON DATOS REALES
 ###
 
-### FUNCION
-fn_prediction <- function(x_new, 
-                          x_new_lasso_ridge, 
-                          datos,
-                          par_y_log){
-  
-  # ## @pars
-  # x_new=pars_usuario_t
-  # x_new_lasso_ridge=pars_usuario_t_lasso_ridge
-  
-  
-  par_ENT <- x_new[,grep("ENT", colnames(x_new))]
-  
-  ### 3. Seleccion del modelo con menor MSE
-  
-  min_mse_value <- min(fn_modelado_res$mse[[par_ENT]]$mse)
-  id_modelo_optimo <- which(fn_modelado_res$mse[[par_ENT]]$mse == min_mse_value)
-  modelo_optimo_name <- fn_modelado_res$mse[[par_ENT]]$modelo[id_modelo_optimo]
-  modelo_optimo <- fn_modelado_res$modelos[[par_ENT]][[id_modelo_optimo]] ## string
-  # length(fn_modelado_res$modelos)
-
-  max_r2_value <- fn_modelado_res$r2[[par_ENT]]$r2[id_modelo_optimo]
-  
-  ### 4. Prediccion con el mejor modelo seleccionado
-  
-  if(modelo_optimo_name=="OLS" | modelo_optimo_name=="Stepwise"){
-    
-    prediction <- predict(fn_modelado_res$modelos[[par_ENT]][[id_modelo_optimo]], newdata = x_new)
-  }
-  if(modelo_optimo_name=="Lasso" | modelo_optimo_name=="Ridge"){
-    prediction <- predict(fn_modelado_res$modelos[[par_ENT]][[id_modelo_optimo]], newx = x_new_lasso_ridge)
-  }
-  if(agrep("H2O", modelo_optimo_name)>0){
-    ### En caso de que se elija el modelo H2O se requiere otro formato
-
-    x_new_h2o <- as.h2o(x_new)
-    prediction <- predict(fn_modelado_res$modelos[[par_ENT]][[id_modelo_optimo]], newdata = x_new_h2o)
-  }
-  
-  if(par_y_log){
-    prediccion_final <- exp(prediction)
-  }else{
-    prediccion_final <- prediction
-  }
-  
-  ### Se reporta el MSE y el R2
-  mse_modelo_optimo <- fn_modelado_res$mse[[par_ENT]]$mse[id_modelo_optimo]
-  id_r2_optimo <- grep(modelo_optimo_name, fn_modelado_res$r2[[par_ENT]]$modelo)
-  r2_modelo_optimo <- fn_modelado_res$r2[[par_ENT]]$r2[id_r2_optimo]
-  
-  ### Se genera un solo Data frame con los resultados principales
-  
-  resultado <- data.frame(cbind(par_ENT=par_ENT, modelo_optimo_name, prediccion=round(as.matrix(prediccion_final),4), mse_modelo_optimo, r2_modelo_optimo))
-  print(resultado)
-  
-  ###
-  ### GRAFICAS
-  ###  
-  
-  par(mfrow = c(1, 2))
-  
-  ### BOXPLOT NACIONAL
-  
-  a <- boxplot(datos$SAL_SEM, main="Nacional")
-  b <- points(as.data.frame(prediccion_final[,1]), col=2, lwd=5, pch=19)
-
-  ### BOXPLOT ESTATAL
-  # Se filtra segun ENTidad
-  # ==============================================================================
-  id_ENT_j <- which(datos$ENT==par_ENT)
-  datos_ENT_j <- datos[id_ENT_j,]
-  
-  a <- boxplot(datos_ENT_j$SAL_SEM, main="Estatal")
-  b <- points(as.data.frame(prediccion_final[,1]), col=2, lwd=5, pch=19)
-  
-  ### Titulos y subtitulos
-  title(main = "Distribución del ingreso.")
-  mysubtitle = paste(modelo_optimo_name, " MSE:",round(min_mse_value, 4), " R2:", round(max_r2_value, 4), sep="")
-  anothersubtitle = paste("Log:", par_y_log,  "Nacional VS", "Entidad:",par_ENT, sep=" ")
-  
-  
-  return(resultado)
-  
-}
-
 ## se guarda el objeto con los resultados
 # save(fn_modelado_res, file="fn_modelado_res.R")
-save.image("equipo_3_modelado.R")
+# save.image("equipo_3_modelado.R")
 
 
 ### -- > HASTA AQUI SE CORRE UNA SOLA VEZ
 ################################################################################
-
 
 
 ################################################################################
@@ -1392,62 +1425,250 @@ h2o.init()
 
 ### 2) Descargar los resultados del modelado
 
-load("equipo_1_modelado.R")
+# load("equipo_3_modelado.R")
 # el objeto que contiene todos los resultados es:
 # fn_modelado_res
 
 ### 3) Capturar datos
+# ## a) formato "normal" para modelos OLS y STEP
+id_sample <-sample(1:nrow(datos), 1, F)
+pars_usuario_t <- datos[id_sample,,drop=F][,-1] ## debe llenarse con los datos nuevos (parametros del usuario). Para ejemplificar se considera una de las observaciones de la base de datos
 
-## Dataframe de los parametros a recabar
-pars_usuario <- data.frame(pars=colnames(datos)[-c(1)], value=NA)
-# 1. Ciudad
-pars_usuario[1,"value"] <- par_1 ## valor capturado de RShiny
-# 2. ENT
-pars_usuario[2,"value"] <- par_2
-# 3. Personas_en_vivienda
-pars_usuario[3,"value"] <- par_3
-# 4. Rraul
-pars_usuario[4,"value"] <- par_4
-# 5. Tipo.de.entrevista
-pars_usuario[4,"value"] <- par_5
-# sucesivamente... hasta 23
+# pars_v <- c(par_sexo, 
+#             par_edad, 
+#             par_ent, 
+#             par_ESC, par_urbano, par_tiempo, par_conyungal, par_indigena, par_tipo_trabajo, par_seguro, par_paren, par_chofer, par_cocinero, par_enfermero, par_fisio, par_cuidados, par_habitantes, par_jefe, par_jefe_femenina, par_jefe_edad)
+# 
+# pars_usuario_t[1,] <- pars_v
 
-### aqui acaba la captura de datos
-
-################################################################################
-### -- > A partir de aqui se corre en el sistema
-################################################################################
-
-pars_usuario_t <- t(pars_usuario)
-names<-pars_usuario_t[1,]
-colnames(pars_usuario_t) <- names
-pars_usuario_t <- pars_usuario_t[2,,drop=F]
-pars_usuario_t <- as.data.frame(pars_usuario_t)
-
-### SE LE DA FORMATO A CADA UNA DE LAS VARIABLES (PARAMETROS) CONSISTETE CON LA BD DE ENTRENAMIENTO
-## se le da formato a las variables categorias
-
-pars_usuario_t$SEXO<- as.factor(pars_usuario_t$SEXO)
-pars_usuario_t$urbano <- as.numeric(pars_usuario_t$urbano)
-pars_usuario_t$INDIGENA <- as.factor(pars_usuario_t$INDIGENA)
-pars_usuario_t$PROGRAMA_SOCIAL <- as.factor(pars_usuario_t$PROGRAMA_SOCIAL)
-pars_usuario_t$SEGURO_MEDICO <- as.factor(pars_usuario_t$SEGURO_MEDICO)
-pars_usuario_t$PAREN <- as.factor(pars_usuario_t$PAREN)
-pars_usuario_t$jefatura_femenina <- as.factor(pars_usuario_t$jefatura_femenina)
-
-### PARA FINES DE EJEMPLIFICACION/SIMULACION
-## a) formato "normal" para modelos OLS y STEP
-id_sample <- sample(1:300, 1, F)
-pars_usuario_t <- datos[id_sample,,drop=F] ## debe llenarse con los datos nuevos (parametros del usuario). Para ejemplificar se considera una de las observaciones de la base de datos
 # b) Formato necesario al dataframe previo porque asi lo requieren los modelos Ridge y Lasso
-pars_usuario_t_lasso_ridge <- model.matrix(formula_i_global, data = datos[id_sample,])[,-1, drop=F]
+pars_usuario_t_lasso_ridge <- model.matrix(fn_modelado_res$formula_i_global, data = datos[id_sample,])[,-1, drop=F]
 
 ### PREDICCION
-prediccion <- fn_prediction(x_new=pars_usuario_t, 
-                            x_new_lasso_ridge=pars_usuario_t_lasso_ridge,
+### FUNCION
+fn_prediction <- function(pars_usuario_t,
+                          formula_i_global,
+                          datos,
+                          par_y_log,
+                          fn_modelado_res){
+  
+  
+  # ## @pars
+  # par_y_log=T
+  # formula_i_global <- fn_modelado_res$formula_i_global
+  
+  
+  
+  ###############################################################################
+  ### -- > A partir de aqui se corre en el sistema
+  ################################################################################
+  
+  
+  ### SE LE DA FORMATO A CADA UNA DE LAS VARIABLES (PARAMETROS) CONSISTETE CON LA BD DE ENTRENAMIENTO
+  
+  pars_usuario_t$SEXO<- as.factor(pars_usuario_t$SEXO)
+  pars_usuario_t$urbano <- as.numeric(pars_usuario_t$urbano)
+  pars_usuario_t$INDIGENA <- as.factor(pars_usuario_t$INDIGENA)
+  # pars_usuario_t$PROGRAMA_SOCIAL <- as.factor(pars_usuario_t$PROGRAMA_SOCIAL)
+  pars_usuario_t$SEGURO_MEDICO <- as.factor(pars_usuario_t$SEGURO_MEDICO)
+  pars_usuario_t$PAREN <- as.factor(pars_usuario_t$PAREN)
+  pars_usuario_t$jefatura_femenina <- as.factor(pars_usuario_t$jefatura_femenina)
+  pars_usuario_t$TIPO_TRABAJO <- as.factor(pars_usuario_t$TIPO_TRABAJO)
+  pars_usuario_t$SIT_CONYUGAL <- as.factor(pars_usuario_t$SIT_CONYUGA)
+  
+  
+  
+  
+  ### se agrega un valor artificial a la primera columan (variable Y) solo para obtener la siguiente matriz que necesitan los modelos Lasso y Ridge
+  pars_usuario_t <- cbind("SAL_SEM"=1, pars_usuario_t)
+  
+  ### se crea la formula para obtener la matriz especifica para modelos Lasso y Ridge
+  pars_usuario_t_lasso_ridge <- model.matrix(formula_i_global, data = datos[1,])[,-1, drop=F]
+  
+  ## se renombran objetos
+  x_new <- pars_usuario_t
+  x_new_lasso_ridge <- pars_usuario_t_lasso_ridge
+  
+  par_ENT <- x_new[,"ent"]
+  par_ENT <- as.numeric(par_ENT)
+  print(c(class(par_ENT), par_ENT))
+  
+  ### 3. Seleccion del modelo con menor MSE
+  
+  min_mse_value <- min(fn_modelado_res$mse[[par_ENT]]$mse, na.rm=T)
+  mse_df <- fn_modelado_res$mse[[par_ENT]]$mse
+  # print(mse_df)
+  id_modelo_optimo <- which(mse_df == min_mse_value)[1]
+  # print(id_modelo_optimo)
+  modelo_optimo_name <- fn_modelado_res$mse[[par_ENT]]$modelo[id_modelo_optimo]
+  modelo_optimo <- fn_modelado_res$modelos[[par_ENT]][[id_modelo_optimo]] ## string
+  # length(fn_modelado_res$modelos)
+  
+  ### Valor de R2
+  max_r2_value <- fn_modelado_res$r2[[par_ENT]]$r2[id_modelo_optimo]
+  
+  ### COEFICIENTES (VALOR DE BETAS O NIVEL DE IMPORTANCIA)
+  coeficientes <- fn_modelado_res$coef[[par_ENT]][[id_modelo_optimo]]
+  colnames(coeficientes) <- c("variable", "coef_importancia")
+  
+  ### 4. Prediccion con el mejor modelo seleccionado
+  
+  if(modelo_optimo_name=="OLS" | modelo_optimo_name=="Stepwise"){
+    
+    prediction <- predict(fn_modelado_res$modelos[[par_ENT]][[id_modelo_optimo]], newdata = x_new)
+  }
+  if(modelo_optimo_name=="Lasso" | modelo_optimo_name=="Ridge"){
+    prediction <- predict(fn_modelado_res$modelos[[par_ENT]][[id_modelo_optimo]], newx = x_new_lasso_ridge)
+  }
+  if(modelo_optimo_name=="Xgboost" | modelo_optimo_name=="Randomforest" | modelo_optimo_name=="Neural_network"){
+    ### En caso de que se elija el modelo H2O se requiere otro formato
+    x_new_h2o <- as.h2o(x_new)
+    prediction <- predict(fn_modelado_res$modelos[[par_ENT]][[id_modelo_optimo]], newdata = x_new_h2o)
+    prediction <- as.data.frame(prediction)
+  }
+  
+  if(par_y_log){
+    prediccion_final <- exp(prediction)
+  }else{
+    prediccion_final <- prediction
+  }
+  
+  
+  ### Se reporta el MSE y el R2
+  mse_modelo_optimo <- fn_modelado_res$mse[[par_ENT]]$mse[id_modelo_optimo]
+  id_r2_optimo <- grep(modelo_optimo_name, fn_modelado_res$r2[[par_ENT]]$modelo)
+  r2_modelo_optimo <- fn_modelado_res$r2[[par_ENT]]$r2[id_r2_optimo]
+  
+  ### Se genera un solo Data frame con los resultados principales
+  
+  resultado <- data.frame(data.frame(par_ENT=par_ENT, modelo_optimo_name, prediccion=round(as.matrix(prediccion_final),4), mse_modelo_optimo, r2_modelo_optimo))
+  print(resultado)
+  
+  ###
+  ### GRAFICAS
+  ###
+  
+  # par(mfrow = c(2, 2)) # divide la pantalla en 1 renglon y 2 columnas
+  
+  ### BOXPLOT NACIONAL
+  
+  ### Se eliminan valores extremos basado en cuantiles
+  quants_values <- quantile(datos$SAL_SEM, probs=seq(0,1, 0.25))
+  id_quant <- which(datos$SAL_SEM>=quants_values[length(quants_values)-1])
+  
+  datos_j_val <- data.frame(dimension="nacional", datos[-id_quant,])
+  
+  # a <- boxplot(datos_j_val$SAL_SEM[-id_quant], main="Nacional", outline=T, horizontal=F)
+  # b <- points(as.data.frame(prediccion_final), col=2, lwd=5, pch=19)
+  
+  ### BOXPLOT ESTATAL
+  # Se filtra segun ENTidad
+  # ==============================================================================
+  id_ENT_j <- which(datos$ent==as.numeric(par_ENT))
+  datos_ENT_j <- datos[id_ENT_j,]
+  
+  ### Se eliminan valores extremos basado en cuantiles
+  quants_values <- quantile(datos_ENT_j$SAL_SEM, probs=seq(0,1, 0.25))
+  id_quant <- which(datos_ENT_j$SAL_SEM>=quants_values[length(quants_values)-1])
+  
+  datos_ENT_j_val <- data.frame(dimension="entidad", datos_ENT_j[-id_quant,])
+  
+  
+  # a <- boxplot(datos_ENT_j$SAL_SEM[-id_quant], main="Estatal", outline=T, horizontal=F)
+  # b <- points(as.data.frame(prediccion_final), col=2, lwd=5, pch=19)
+  
+  ### BOXPLOT OFICIO
+  # Se filtra segun ENTidad
+  # ==============================================================================
+  id_oficio_j <- which(datos$TIPO_TRABAJO==as.numeric(pars_usuario_t$TIPO_TRABAJO))
+  datos_oficio_j <- datos[id_oficio_j,]
+  
+  ### Se eliminan valores extremos basado en cuantiles
+  quants_values <- quantile(datos_oficio_j$SAL_SEM, probs=seq(0,1, 0.25))
+  id_quant <- which(datos_oficio_j$SAL_SEM>=quants_values[length(quants_values)-1])
+  
+  datos_oficio_j_val <- data.frame(dimension="oficio", datos_oficio_j[-id_quant,])
+  
+  
+  # a <- boxplot(datos_oficio_j$SAL_SEM[-id_quant], main="TIPO_TRABAJO", outline=T, horizontal=F)
+  # b <- points(as.data.frame(prediccion_final), col=2, lwd=5, pch=19)
+  
+  ### BOXPLOT OFICIO ESTATAL
+  # Se filtra segun ENTidad
+  # ==============================================================================
+  id_ENT_oficio_j <- which(datos[id_ENT_j,]$TIPO_TRABAJO==as.numeric(pars_usuario_t$TIPO_TRABAJO))
+  datos_ENT_oficio_j <- datos[id_ENT_j,][id_ENT_oficio_j,]
+  
+  ### Se eliminan valores extremos basado en cuantiles
+  quants_values <- quantile(datos_ENT_oficio_j$SAL_SEM, probs=seq(0,1, 0.25))
+  id_quant <- which(datos_ENT_oficio_j$SAL_SEM>=quants_values[length(quants_values)-1])
+  
+  datos_ENT_oficio_j_val <- data.frame(dimension="entidad_oficio", datos_ENT_oficio_j[-id_quant,])
+  
+  a <- boxplot(datos_ENT_oficio_j$SAL_SEM[-id_quant], main="Oficio", outline=T, horizontal=F)
+  b <- points(as.data.frame(prediccion_final), col=2, lwd=5, pch=19)
+  
+  ### se genera un solo dataframe que servira para el boxplot conjunto
+  
+  datos_boxplot <- rbind(datos_j_val,
+                         datos_ENT_j_val,
+                         datos_oficio_j_val,
+                         datos_ENT_oficio_j_val)
+  
+  datos_boxplot$dimension <- factor(datos_boxplot$dimension , levels=c("nacional", "entidad", "oficio", "entidad_oficio"))
+  
+  ## BOXPLOT
+  # View(datos_boxplot)
+  y_value <- as.numeric(as.data.frame(prediccion_final))
+  boxplot <- datos_boxplot %>%
+    ggplot( aes(x=dimension, y=SAL_SEM, fill=dimension)) +
+    theme(legend.position="none")+
+    geom_boxplot() +
+    geom_point(aes(x=1, y=y_value), col="red", size=3)+
+    geom_point(aes(x=2, y=y_value), col="red", size=3)+
+    geom_point(aes(x=3, y=y_value), col="red", size=3)+
+    geom_point(aes(x=4, y=y_value), col="red", size=3)
+  
+  
+  ### Titulos y subtitulos
+  # title(main = paste("Predicción del Salario:", round(as.data.frame(prediccion_final[,1]), 4), sep=" "))
+  # mysubtitle = paste(modelo_optimo_name, " MSE:",round(min_mse_value, 4), " R2:", round(max_r2_value, 4), sep="")
+  
+  ## Se grafica la importancia de las variables
+  if(modelo_optimo_name=="Xgboost" | modelo_optimo_name=="Randomforest" | modelo_optimo_name=="Neural_network"){
+    titulo_text <- "Relevancia de variables"
+  }else{
+    titulo_text <- "Coeficientes del modelo lineal"
+  }
+  
+  
+  coef_grafica <- coeficientes %>%
+    ggplot(aes(x = reorder(variable, -coef_importancia), y = coef_importancia)) +
+    geom_col() +
+    labs(title = titulo_text) +
+    theme_bw() +
+    theme(axis.text.x = element_text(size = 10, angle =0))
+  # barplot(coeficientes[,2], xlab=coeficientes[,1])
+  
+  # print(coef_grafica)
+  
+  
+  ### SE GRAFICA
+  require(gridExtra)
+  
+  grid.arrange(boxplot, coef_grafica, nrow=2)
+  
+  
+  return(resultado)
+  
+}
+# undebug(fn_prediction)
+prediccion <- fn_prediction(pars_usuario_t,
+                            fn_modelado_res$formula_i_global,
                             datos,
-                            par_y_log)
+                            par_y_log=T,
+                            fn_modelado_res)
 prediccion
 
-
+save.image("equipo_3_modeladofinal.R")
 

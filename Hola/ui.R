@@ -25,12 +25,12 @@ shinyUI(
                  sidebarLayout(position = "right",
                                sidebarPanel(
                                  #actionButton("do", "Click Me"),
-                                 submitButton("Enviar", icon("refresh")),
+                                 submitButton("Ejecutar"),
                                  helpText("Para enviar tus datos da click al boton"),
                                  
-                                 p("El ingreso según la ENUT"),
-                                 #textOutput("ingreso")
-                                            
+                                 p("El salario semanal según la ENUT",
+                                   #textOutput("ingreso"),
+                                   plotOutput("distPlot", width = 1000, height=900))             
                                ),
                                mainPanel(
                                  tabsetPanel(
@@ -80,16 +80,14 @@ shinyUI(
                                                                     c("Sí","No")),
                                                        radioButtons("ProgramaSocial",
                                                                     "¿Recientemente tramitó o cobró un programa social?",
-                                                                    c("Sí","No")))),
-
-                                   #tabPanel("Acceso a seguridad social",
-                                            #h4("Ingresa tus datos de afiliación:", align = "center"),
-                                            #flowLayout(radioButtons("Afiliacion",
-                                                                    #"¿Está afiliado a algún servicio médico?",
-                                                                    #c("Sí","No")),
-                                                       #radioButtons("ProgramaSocial",
-                                                                    #"¿Recientemente tramitó o cobró un programa social?",
-                                                                    #c("Sí","No")))),
+                                                                    c("Sí","No")),
+                                                       selectInput("Tipotrabajo",
+                                                                   "En su trabajo de la semana pasada, ¿usted fue?",
+                                                                   c("Empleado(a) u obrero(a)",
+                                                                     "Trabajador(a) sin pago en un negocio familiar o no familia",
+                                                                     "Jornalero(a) o peón",
+                                                                     "Trabajador(a) por mi cuenta",
+                                                                     "Patrón(a) o empleado")))),
                                    tabPanel("Caracteristicas del hogar",
                                             h4("Ingresa las caracteristicas de tu hogar:", align = "center"),
                                             flowLayout(numericInput("nPersonas",
@@ -166,12 +164,15 @@ shinyUI(
                                                        numericInput("cuidador5",
                                                                     "Ayudar o apoyar en el trabajo de algún adulto mayor",
                                                                     value=0,
-                                                                    step = 0.5))))
-                          ))),#tabpanel
+                                                                    step = 0.5))),
+                                   tabPanel("Resultados",
+                                            h4("Predicción", align = "center"),
+                                               plotOutput("distPlot", width = 1000, height=900))))
+                          )),#tabpanel
       tabPanel("ENOE",
                sidebarLayout(position = "right",
                             sidebarPanel(
-                              submitButton("Enviar", icon("refresh")),
+                              submitButton("Enviar"),
                               helpText("Para enviar tus datos da click al boton"),
                               
                               p("El ingreso según la ENOE"),
@@ -314,9 +315,9 @@ shinyUI(
                                                              numericInput("p3.12",
                                                                           "Ayudar o apoyar en el trabajo de algún adulto mayor",
                                                                           value=0,
-                                                                          step = 0.5)))),
-                                                             
-                                                                ))),
+                                                                          step = 0.5))),
+                                )))),
+                                                            
       tabPanel("AMAI",
                sidebarLayout(
                  sidebarPanel(

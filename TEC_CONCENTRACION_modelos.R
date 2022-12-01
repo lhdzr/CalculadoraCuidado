@@ -169,6 +169,7 @@ fn_modelado <- function(datos,
   results_ls$mse <- list()
   results_ls$modelos <- list()
   results_ls$bd <- list()
+  results_ls$formula_i_global <- list()
   
   ###
   ### TRANSFORMACION DE LA VARIABLE Y A LOG(Y)
